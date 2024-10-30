@@ -1,5 +1,0 @@
-/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-rest-api/src/main/java/de/adorsys/ledgers/bank/api/exception/DepositHttpStatusResolver.java
-/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-rest-api/src/main/java/de/adorsys/ledgers/bank/api/exception/ExceptionAdvisor.java
-/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-rest-api/src/main/java/de/adorsys/ledgers/bank/api/resource/AccountMgmResourceAPI.java
-/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-rest-api/src/main/java/de/adorsys/ledgers/bank/api/resource/AccountRestAPI.java
-/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-rest-api/src/main/java/de/adorsys/ledgers/bank/api/utils/Constants.java
