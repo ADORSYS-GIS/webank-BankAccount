@@ -23,6 +23,7 @@
 		<module>ledgers-bank-account-service-impl</module>
 		<module>ledgers-bank-account-rest-api</module>
 		<module>ledgers-bank-account-rest-server</module>
+        <module>ledgers-bank-account-rest-client</module>
     </modules>
 
 	<packaging>pom</packaging>

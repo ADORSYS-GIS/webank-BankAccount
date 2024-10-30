@@ -301,7 +301,7 @@ class BankAccountPaymentServiceImplTest {
 
     private byte[] getRemittanceInfoStructured() {
         try {
-            return Files.readAllBytes(Path.of("src/test/resources/de/adorsys/ledgers/deposit/api/service/impl/RemittanceInfoStructured.yml"));
+            return Files.readAllBytes(Path.of("src/test/resources/de/adorsys/ledgers/bank/api/service/impl/RemittanceInfoStructured.yml"));
         } catch (IOException ex) {
             ex.printStackTrace(); //NOPMD
             throw new IllegalStateException("Resource file not found", ex);
