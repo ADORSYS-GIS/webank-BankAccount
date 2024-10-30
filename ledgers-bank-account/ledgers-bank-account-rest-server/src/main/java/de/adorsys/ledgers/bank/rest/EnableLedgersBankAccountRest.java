@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
 @Import({
-	LedgersDepositRestConfiguration.class
+	LedgersBankAccountRestConfiguration.class
 })
-public @interface EnableLedgersDepositRest {
+public @interface EnableLedgersBankAccountRest {
 }

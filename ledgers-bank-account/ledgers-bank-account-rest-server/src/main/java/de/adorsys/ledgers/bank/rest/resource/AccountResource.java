@@ -19,14 +19,14 @@ import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
 import de.adorsys.ledgers.bank.api.domain.account.TransactionTO;
 import de.adorsys.ledgers.bank.api.resource.AccountRestAPI;
 import de.adorsys.ledgers.bank.api.service.BankAccountService;
-import de.adorsys.ledgers.bank.rest.annotation.DepositUserResource;
+import de.adorsys.ledgers.bank.rest.annotation.BankAccountUserResource;
 import de.adorsys.ledgers.util.domain.CustomPageImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@DepositUserResource
+@BankAccountUserResource
 @RequiredArgsConstructor
 @RequestMapping(AccountRestAPI.BASE_PATH)
 public class AccountResource implements AccountRestAPI {

@@ -5,4 +5,4 @@
 
 package de.adorsys.ledgers.bank.rest;
 
-public class LedgersDepositRestBasePackage {}
+public class LedgersBankAccountRestBasePackage {}

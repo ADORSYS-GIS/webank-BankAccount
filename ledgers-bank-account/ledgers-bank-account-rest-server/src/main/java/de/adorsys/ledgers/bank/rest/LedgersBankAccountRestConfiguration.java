@@ -10,6 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackageClasses= {LedgersDepositRestBasePackage.class})
-public class LedgersDepositRestConfiguration {
+@ComponentScan(basePackageClasses= {LedgersBankAccountRestBasePackage.class})
+public class LedgersBankAccountRestConfiguration {
 }
