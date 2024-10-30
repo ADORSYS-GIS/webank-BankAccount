@@ -1,0 +1,17 @@
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/domain/BankTransactionCodeTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/BankAccountPaymentServiceImplTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/BankAccountServiceImplTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/BankAccountTransactionServiceImplTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/CurrencyExchangeRatesServiceImplTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/PaymentExecutionSchedulerTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/PaymentExecutionServiceTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/TransactionServiceImplTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/mockbank/Config.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/mockbank/DepositAccountInitServiceImplIT.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/mockbank/DepositAccountServiceImplIT.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/mockbank/MockBankConfigSource.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/impl/test/BankAccountServiceApplication.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/mappers/DepositAccountMapperTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/mappers/PaymentMapperTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/mappers/PostingMapperTest.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-service-impl/src/test/java/de/adorsys/ledgers/bank/api/service/mappers/TransactionDetailsMapperTest.java

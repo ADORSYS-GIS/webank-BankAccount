@@ -1,0 +1,4 @@
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-repository/src/test/java/de/adorsys/ledgers/bank/db/repository/BankAccountRepositoryIT.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-repository/src/test/java/de/adorsys/ledgers/bank/db/repository/PaymentRepositoryIT.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-repository/src/test/java/de/adorsys/ledgers/bank/db/test/BankAccountRepositoryApplication.java
+/home/francis/dev/webbank-BankAccount/ledgers-bank-account/ledgers-bank-account-repository/src/test/java/de/adorsys/ledgers/bank/db/test/SecurityConfig.java

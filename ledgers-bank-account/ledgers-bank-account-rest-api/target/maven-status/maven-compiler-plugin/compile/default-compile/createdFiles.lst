@@ -1,0 +1,5 @@
+de/adorsys/ledgers/bank/api/resource/AccountRestAPI.class
+de/adorsys/ledgers/bank/api/utils/Constants.class
+de/adorsys/ledgers/bank/api/resource/AccountMgmResourceAPI.class
+de/adorsys/ledgers/bank/api/exception/ExceptionAdvisor.class
+de/adorsys/ledgers/bank/api/exception/DepositHttpStatusResolver.class
