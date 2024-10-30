@@ -69,9 +69,9 @@ class BankAccountTransactionServiceImplTest {
     private BankAccountTransactionServiceImpl transactionService;
 
     @Mock
-    private BankAccountService BankAccountService;
+    private BankAccountService bankAccountService;
     @Mock
-    private BankAccountConfigService BankAccountConfigService;
+    private BankAccountConfigService bankAccountConfigService;
     @Mock
     private LedgerService ledgerService;
     @Mock
@@ -92,7 +92,7 @@ class BankAccountTransactionServiceImplTest {
 
     private static final ObjectMapper STATIC_MAPPER;
 
-    private final BankAccountMapper BankAccountMapper = Mappers.getMapper(BankAccountMapper.class);
+    private final BankAccountMapper bankAccountMapper = Mappers.getMapper(BankAccountMapper.class);
 
     static {
         STATIC_MAPPER = new ObjectMapper()
@@ -109,7 +109,7 @@ class BankAccountTransactionServiceImplTest {
     @Test
     void depositCash_accountNotFound() {
         // Given
-        when(BankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenThrow(DepositModuleException.class);
+        when(bankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenThrow(DepositModuleException.class);
         AmountBO amountBO = new AmountBO(EUR, BigDecimal.TEN);
         // Then
         assertThrows(DepositModuleException.class, () -> transactionService.depositCash(ACCOUNT_ID, amountBO, "recordUser"));
@@ -125,11 +125,11 @@ class BankAccountTransactionServiceImplTest {
     @Test
     void depositCash_blockedAccount() {
         // Given
-        BankAccountDetailsBO BankAccountDetailsBO = getBankAccountBO();
+        BankAccountDetailsBO bankAccountDetailsBO = getBankAccountBO();
         BankAccountBO blockedAccount = new BankAccountBO();
         blockedAccount.setBlocked(true);
-        BankAccountDetailsBO.setAccount(blockedAccount);
-        when(BankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenReturn(BankAccountDetailsBO);
+        bankAccountDetailsBO.setAccount(blockedAccount);
+        when(bankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenReturn(bankAccountDetailsBO);
         AmountBO amountBO = new AmountBO(EUR, BigDecimal.valueOf(123L));
         // Then
         assertThrows(DepositModuleException.class, () -> transactionService.depositCash(ACCOUNT_ID, amountBO, "recordUser"));
@@ -138,7 +138,7 @@ class BankAccountTransactionServiceImplTest {
     @Test
     void depositCash_differentCurrencies() {
         // Given
-        when(BankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenReturn(getBankAccountBO());
+        when(bankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenReturn(getBankAccountBO());
         AmountBO amountBO = new AmountBO(USD, BigDecimal.TEN);
         // Then
         assertThrows(DepositModuleException.class, () -> transactionService.depositCash(ACCOUNT_ID, amountBO, "recordUser"));
@@ -147,10 +147,10 @@ class BankAccountTransactionServiceImplTest {
     @Test
     void depositCash_OK() throws IOException {
         // Given
-        when(BankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenReturn(getBankAccountBO());
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountService.getAccountDetailsById(anyString(), any(), anyBoolean())).thenReturn(getBankAccountBO());
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(any())).thenReturn(Optional.of(getLedger()));
-        when(BankAccountConfigService.getCashAccount()).thenReturn("id");
+        when(bankAccountConfigService.getCashAccount()).thenReturn("id");
         when(ledgerService.findLedgerAccount(any(), anyString())).thenReturn(new LedgerAccountBO());
         when(ledgerService.findLedgerAccountById(any())).thenReturn(new LedgerAccountBO());
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
@@ -173,7 +173,7 @@ class BankAccountTransactionServiceImplTest {
             assertThat(transactionDetails.getEndToEndId()).isEqualTo(line.getId());
             assertThat(transactionDetails.getTransactionId()).isNotBlank();
             assertThat(transactionDetails.getBookingDate()).isEqualTo(transactionDetails.getValueDate());
-            assertThat(transactionDetails.getCreditorAccount()).usingRecursiveComparison().isEqualTo(BankAccountMapper.toAccountReferenceBO(getBankAccount()));
+            assertThat(transactionDetails.getCreditorAccount()).usingRecursiveComparison().isEqualTo(bankAccountMapper.toAccountReferenceBO(getBankAccount()));
             assertThat(transactionDetails.getTransactionAmount()).usingRecursiveComparison().isEqualTo(amount);
         }
     }
@@ -189,13 +189,13 @@ class BankAccountTransactionServiceImplTest {
         when(postingMapper.buildPostingLine(anyString(), any(), any(), any(), anyString(), anyString())).thenAnswer(i -> localPostingMapper.buildPostingLine((String) i.getArguments()[0], (LedgerAccountBO) i.getArguments()[1], (BigDecimal) i.getArguments()[2], (BigDecimal) i.getArguments()[3], (String) i.getArguments()[4], (String) i.getArguments()[5]));
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
 
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(anyString())).thenReturn(Optional.of(new LedgerBO("mockbank", "id", null, null, null, null, null)));
 
         when(exchangeRatesService.getExchangeRates(any(), any(), any())).thenReturn(getRates(EUR, EUR, EUR));
         when(exchangeRatesService.applyRate(any(), any())).thenAnswer(i -> new CurrencyExchangeRatesServiceImpl(null, null).applyRate(i.getArgument(0), i.getArgument(1)));
 
-        when(BankAccountConfigService.getClearingAccount(any())).thenReturn("clearing");
+        when(bankAccountConfigService.getClearingAccount(any())).thenReturn("clearing");
         when(ledgerService.findLedgerAccount(any(), anyString())).thenReturn(new LedgerAccountBO("clearing", new LedgerBO()));
 
         // When
@@ -232,14 +232,14 @@ class BankAccountTransactionServiceImplTest {
         when(postingMapper.buildPostingLine(anyString(), any(), any(), any(), anyString(), anyString())).thenAnswer(i -> localPostingMapper.buildPostingLine((String) i.getArguments()[0], (LedgerAccountBO) i.getArguments()[1], (BigDecimal) i.getArguments()[2], (BigDecimal) i.getArguments()[3], (String) i.getArguments()[4], (String) i.getArguments()[5]));
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
 
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(anyString())).thenReturn(Optional.of(new LedgerBO("mockbank", "id", null, null, null, null, null)));
 
         when(exchangeRatesService.getExchangeRates(any(), any(), any())).thenReturn(getRates(EUR, USD, USD));
         when(exchangeRatesService.applyRate(any(), any())).thenAnswer(i -> new CurrencyExchangeRatesServiceImpl(null, null).applyRate(i.getArgument(0), i.getArgument(1)));
 
         when(ledgerService.findLedgerAccountById(anyString())).thenReturn(new LedgerAccountBO("clearing", new LedgerBO()));
-        when(BankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
+        when(bankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
 
         // When
         transactionService.bookPayment(payment, REQUEST_TIME, "TEST");
@@ -287,11 +287,11 @@ class BankAccountTransactionServiceImplTest {
         when(postingMapper.buildPosting(any(), anyString(), anyString(), any(), anyString())).thenAnswer(i -> localPostingMapper.buildPosting((LocalDateTime) i.getArguments()[0], (String) i.getArguments()[1], (String) i.getArguments()[2], (LedgerBO) i.getArguments()[3], (String) i.getArguments()[4]));
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
 
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(anyString())).thenReturn(Optional.of(new LedgerBO("mockbank", "id", null, null, null, null, null)));
 
         when(exchangeRatesService.getExchangeRates(any(), any(), any())).thenReturn(getRates(EUR, USD, USD));
-        when(BankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
+        when(bankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
 
         // Then
         assertThrows(DepositModuleException.class, () -> transactionService.bookPayment(payment, REQUEST_TIME, "TEST"));
@@ -308,14 +308,14 @@ class BankAccountTransactionServiceImplTest {
         when(postingMapper.buildPostingLine(anyString(), any(), any(), any(), anyString(), anyString())).thenAnswer(i -> localPostingMapper.buildPostingLine((String) i.getArguments()[0], (LedgerAccountBO) i.getArguments()[1], (BigDecimal) i.getArguments()[2], (BigDecimal) i.getArguments()[3], (String) i.getArguments()[4], (String) i.getArguments()[5]));
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
 
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(anyString())).thenReturn(Optional.of(new LedgerBO("mockbank", "id", null, null, null, null, null)));
 
         when(exchangeRatesService.getExchangeRates(any(), any(), any())).thenReturn(getRates(EUR, USD, CHF));
         when(exchangeRatesService.applyRate(any(), any())).thenAnswer(i -> new CurrencyExchangeRatesServiceImpl(null, null).applyRate(i.getArgument(0), i.getArgument(1)));
 
         when(ledgerService.findLedgerAccountById(anyString())).thenReturn(new LedgerAccountBO("clearing", new LedgerBO()));
-        when(BankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
+        when(bankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
 
         // When
         transactionService.bookPayment(payment, REQUEST_TIME, "TEST");
@@ -367,14 +367,14 @@ class BankAccountTransactionServiceImplTest {
         when(postingMapper.buildPostingLine(anyString(), any(), any(), any(), anyString(), anyString())).thenAnswer(i -> localPostingMapper.buildPostingLine((String) i.getArguments()[0], (LedgerAccountBO) i.getArguments()[1], (BigDecimal) i.getArguments()[2], (BigDecimal) i.getArguments()[3], (String) i.getArguments()[4], (String) i.getArguments()[5]));
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
 
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(anyString())).thenReturn(Optional.of(new LedgerBO("mockbank", "id", null, null, null, null, null)));
 
         when(exchangeRatesService.getExchangeRates(any(), any(), any())).thenReturn(getRates(EUR, EUR, EUR));
         when(exchangeRatesService.applyRate(any(), any())).thenAnswer(i -> new CurrencyExchangeRatesServiceImpl(null, null).applyRate(i.getArgument(0), i.getArgument(1)));
 
         when(ledgerService.findLedgerAccountById(anyString())).thenReturn(new LedgerAccountBO("clearing", new LedgerBO()));
-        when(BankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
+        when(bankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
 
         // When
         transactionService.bookPayment(payment, REQUEST_TIME, "TEST");
@@ -411,14 +411,14 @@ class BankAccountTransactionServiceImplTest {
         when(postingMapper.buildPostingLine(anyString(), any(), any(), any(), anyString(), anyString())).thenAnswer(i -> localPostingMapper.buildPostingLine((String) i.getArguments()[0], (LedgerAccountBO) i.getArguments()[1], (BigDecimal) i.getArguments()[2], (BigDecimal) i.getArguments()[3], (String) i.getArguments()[4], (String) i.getArguments()[5]));
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
 
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(anyString())).thenReturn(Optional.of(new LedgerBO("mockbank", "id", null, null, null, null, null)));
 
         when(exchangeRatesService.getExchangeRates(any(), any(), any())).thenReturn(getRates(EUR, EUR, EUR));
         when(exchangeRatesService.applyRate(any(), any())).thenAnswer(i -> new CurrencyExchangeRatesServiceImpl(null, null).applyRate(i.getArgument(0), i.getArgument(1)));
 
         when(ledgerService.findLedgerAccountById(anyString())).thenReturn(new LedgerAccountBO("clearing", new LedgerBO()));
-        when(BankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
+        when(bankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
 
         // When
         transactionService.bookPayment(payment, REQUEST_TIME, "TEST");
@@ -454,15 +454,15 @@ class BankAccountTransactionServiceImplTest {
         when(postingMapper.buildPostingLine(anyString(), any(), any(), any(), anyString(), anyString())).thenAnswer(i -> localPostingMapper.buildPostingLine((String) i.getArguments()[0], (LedgerAccountBO) i.getArguments()[1], (BigDecimal) i.getArguments()[2], (BigDecimal) i.getArguments()[3], (String) i.getArguments()[4], (String) i.getArguments()[5]));
         when(serializeService.serializeOprDetails(any())).thenAnswer(i -> STATIC_MAPPER.writeValueAsString(i.getArguments()[0]));
 
-        when(BankAccountConfigService.getLedger()).thenReturn("mockbank");
+        when(bankAccountConfigService.getLedger()).thenReturn("mockbank");
         when(ledgerService.findLedgerByName(anyString())).thenReturn(Optional.of(new LedgerBO("mockbank", "id", null, null, null, null, null)));
 
         when(exchangeRatesService.getExchangeRates(any(), any(), any())).thenReturn(getRates(EUR, USD, USD));
         when(exchangeRatesService.applyRate(any(), any())).thenAnswer(i -> new CurrencyExchangeRatesServiceImpl(null, null).applyRate(i.getArgument(0), i.getArgument(1)));
 
         when(ledgerService.findLedgerAccountById(anyString())).thenReturn(new LedgerAccountBO("user account", new LedgerBO()));
-        when(BankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
-        when(BankAccountConfigService.getClearingAccount(anyString())).thenReturn("some");
+        when(bankAccountService.getOptionalAccountByIbanAndCurrency(any(), any())).thenReturn(Optional.of(getBankAccountBO().getAccount()));
+        when(bankAccountConfigService.getClearingAccount(anyString())).thenReturn("some");
         when(ledgerService.findLedgerAccount(any(), anyString())).thenReturn(new LedgerAccountBO("clearing", new LedgerBO()));
 
         // When

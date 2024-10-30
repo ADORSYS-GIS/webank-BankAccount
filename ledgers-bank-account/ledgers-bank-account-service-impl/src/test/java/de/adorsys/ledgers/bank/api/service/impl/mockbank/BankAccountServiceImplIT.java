@@ -51,15 +51,15 @@ class BankAccountServiceImplIT {
     @Autowired
     private LedgerService ledgerService;
     @Autowired
-    private BankAccountConfigService BankAccountConfigService;
+    private BankAccountConfigService bankAccountConfigService;
     @Autowired
-    private BankAccountInitService BankAccountInitService;
+    private BankAccountInitService bankAccountInitService;
 
     private ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     @BeforeEach
     void initBankAccount() {
-        BankAccountInitService.initConfigData();
+        bankAccountInitService.initConfigData();
     }
 
     /**
@@ -150,7 +150,7 @@ class BankAccountServiceImplIT {
     }
 
     private LedgerBO loadLedger() {
-        String ledgerName = BankAccountConfigService.getLedger();
+        String ledgerName = bankAccountConfigService.getLedger();
         return ledgerService.findLedgerByName(ledgerName).orElseThrow(() -> new IllegalStateException(String.format("Ledger with name %s not found", ledgerName)));
     }
 
