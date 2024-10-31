@@ -29,7 +29,7 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-utils</artifactId>
-            <version>${project.version}</version>
+            <version>${ledgers.version}</version>
         </dependency>
 
         <!-- spring dependencies -->

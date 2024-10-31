@@ -63,6 +63,10 @@
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <maven-pmd-plugin.version>3.21.0</maven-pmd-plugin.version>
 
+        <!-- Ledgers -->
+        <ledgers.version>6.1-SNAPSHOT</ledgers.version>
+
+
         <!-- Spring-related versions -->
         <spring-boot-dependencies.version>3.2.7</spring-boot-dependencies.version>
         <spring-cloud-starter-openfeign.version>4.1.0</spring-cloud-starter-openfeign.version>
@@ -167,6 +171,23 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- Ledgers Dependencies-->
+            <dependency>
+                <groupId>de.adorsys.ledgers</groupId>
+                <artifactId>ledgers-utils</artifactId>
+                <version>${ledgers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.adorsys.ledgers</groupId>
+                <artifactId>ledgers-postings-repository</artifactId>
+                <version>${ledgers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.adorsys.ledgers</groupId>
+                <artifactId>ledgers-postings-service-api</artifactId>
+                <version>${ledgers.version}</version>
+            </dependency>
 
             <!-- spring dependencies -->
 
