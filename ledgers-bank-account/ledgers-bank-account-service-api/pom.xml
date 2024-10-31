@@ -29,7 +29,6 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-postings-service-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
