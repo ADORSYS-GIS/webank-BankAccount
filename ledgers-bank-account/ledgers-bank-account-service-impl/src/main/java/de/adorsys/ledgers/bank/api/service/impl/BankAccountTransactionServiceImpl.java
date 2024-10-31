@@ -43,17 +43,17 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
     private final PostingMapper postingMapper;
     private final PostingService postingService;
     private final SerializeService serializeService;
-    private final BankAccountService BankAccountService;
+    private final BankAccountService bankAccountService;
     private final CurrencyExchangeRatesService exchangeRatesService;
     private final ObjectMapper objectMapper;
 
-    public BankAccountTransactionServiceImpl(PostingService postingService, LedgerService ledgerService, BankAccountConfigService BankAccountConfigService, PaymentMapper paymentMapper, PostingMapper postingMapper, SerializeService serializeService, BankAccountService BankAccountService, CurrencyExchangeRatesService exchangeRatesService, ObjectMapper objectMapper) {
-        super(BankAccountConfigService, ledgerService);
+    public BankAccountTransactionServiceImpl(PostingService postingService, LedgerService ledgerService, BankAccountConfigService bankAccountConfigService, PaymentMapper paymentMapper, PostingMapper postingMapper, SerializeService serializeService, BankAccountService bankAccountService, CurrencyExchangeRatesService exchangeRatesService, ObjectMapper objectMapper) {
+        super(bankAccountConfigService, ledgerService);
         this.postingService = postingService;
         this.paymentMapper = paymentMapper;
         this.postingMapper = postingMapper;
         this.serializeService = serializeService;
-        this.BankAccountService = BankAccountService;
+        this.bankAccountService = bankAccountService;
         this.exchangeRatesService = exchangeRatesService;
         this.objectMapper = objectMapper;
     }
@@ -67,16 +67,16 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
                           .build();
         }
 
-        BankAccountDetailsBO BankAccount = BankAccountService.getAccountDetailsById(accountId, LocalDateTime.now(), true);
+        BankAccountDetailsBO bankAccount = bankAccountService.getAccountDetailsById(accountId, LocalDateTime.now(), true);
 
-        if (!BankAccount.isEnabled()) {
+        if (!bankAccount.isEnabled()) {
             throw DepositModuleException.builder()
                           .errorCode(DEPOSIT_OPERATION_FAILURE)
                           .devMsg("Deposit account is blocked, cannot deposit cash.")
                           .build();
         }
 
-        Currency accountCurrency = BankAccount.getAccount().getCurrency();
+        Currency accountCurrency = bankAccount.getAccount().getCurrency();
 
         if (!accountCurrency.equals(amount.getCurrency())) {
             throw DepositModuleException.builder()
@@ -87,7 +87,7 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
         }
         LedgerBO ledger = loadLedger();
         LocalDateTime postingDateTime = LocalDateTime.now();
-        depositCash(BankAccount, amount, recordUser, ledger, postingDateTime);
+        depositCash(bankAccount, amount, recordUser, ledger, postingDateTime);
     }
 
     /**
@@ -111,16 +111,16 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
         }
     }
 
-    private void depositCash(BankAccountDetailsBO BankAccount, AmountBO amount, String recordUser, LedgerBO ledger, LocalDateTime postingDateTime) {
+    private void depositCash(BankAccountDetailsBO bankAccount, AmountBO amount, String recordUser, LedgerBO ledger, LocalDateTime postingDateTime) {
         PostingBO posting = postingMapper.buildPosting(postingDateTime, Ids.id(), "ATM Cash Deposit", ledger, recordUser);
-        PostingLineBO debitLine = composeLine(BankAccount, amount, ledger, postingDateTime, true);
-        PostingLineBO creditLine = composeLine(BankAccount, amount, ledger, postingDateTime, false);
+        PostingLineBO debitLine = composeLine(bankAccount, amount, ledger, postingDateTime, true);
+        PostingLineBO creditLine = composeLine(bankAccount, amount, ledger, postingDateTime, false);
         posting.getLines().addAll(Arrays.asList(debitLine, creditLine));
         postingService.newPosting(posting);
     }
 
-    private PostingLineBO composeLine(BankAccountDetailsBO BankAccount, AmountBO amount, LedgerBO ledger, LocalDateTime postingDateTime, boolean debit) {
-        BankAccountBO account = BankAccount.getAccount();
+    private PostingLineBO composeLine(BankAccountDetailsBO bankAccount, AmountBO amount, LedgerBO ledger, LocalDateTime postingDateTime, boolean debit) {
+        BankAccountBO account = bankAccount.getAccount();
         LedgerAccountBO ledgerAccount = debit
                                                 ? ledgerService.findLedgerAccount(ledger, bankAccountConfigService.getCashAccount())
                                                 : ledgerService.findLedgerAccountById(account.getLinkedAccounts());
@@ -128,7 +128,7 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
         BigDecimal debitAmount = getDCtAmount(amount, debit, null);
         BigDecimal creditAmount = getDCtAmount(amount, !debit, null);
 
-        BalanceBO balanceAfterTransaction = resolveBalanceAfterTransaction(!debit, BankAccount, debitAmount);
+        BalanceBO balanceAfterTransaction = resolveBalanceAfterTransaction(!debit, bankAccount, debitAmount);
 
         String lineId = Ids.id();
         AccountReferenceBO creditor = account.getReference();
@@ -146,7 +146,7 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
 
     private BalanceBO resolveBalanceAfterTransactionForPayment(boolean debit, PaymentTargetBO target, BigDecimal amount) {
         BankAccountDetailsBO accountDetails = debit
-                                                         ? BankAccountService.getAccountDetailsById(target.getPayment().getAccountId(), LocalDateTime.now(), true)
+                                                         ? bankAccountService.getAccountDetailsById(target.getPayment().getAccountId(), LocalDateTime.now(), true)
                                                          : getAccount(target.getCreditorAccount().getIban(), target.getCreditorAccount().getCurrency());
         return resolveBalanceAfterTransaction(debit, accountDetails, amount);
     }
@@ -183,7 +183,7 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
 
         AmountBO amount = new AmountBO(payment.getDebtorAccount().getCurrency(), batchAmount);
         String id = Ids.id();
-        BalanceBO balanceAfterTransaction = resolveBalanceAfterTransaction(true, BankAccountService.getAccountDetailsById(payment.getAccountId(), LocalDateTime.now(), true), batchAmount);
+        BalanceBO balanceAfterTransaction = resolveBalanceAfterTransaction(true, bankAccountService.getAccountDetailsById(payment.getAccountId(), LocalDateTime.now(), true), batchAmount);
         ratesForDebitLine = ratesForDebitLine.isEmpty() ? null : ratesForDebitLine;
         String debitLineDetails = serializeService.serializeOprDetails(paymentMapper.toPaymentTargetDetailsBatch(id, payment, amount, pstTime.toLocalDate(), ratesForDebitLine, balanceAfterTransaction, objectMapper));
         LedgerAccountBO debtorLedgerAccount = getLedgerAccount(ledger, payment.getPaymentProduct(), payment.getDebtorAccount(), true, true, false);
@@ -233,7 +233,7 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
 
     private BankAccountDetailsBO getAccount(String iban, Currency currency) {
         try {
-            return BankAccountService.getAccountDetailsByIbanAndCurrency(iban, currency, LocalDateTime.now(), true);
+            return bankAccountService.getAccountDetailsByIbanAndCurrency(iban, currency, LocalDateTime.now(), true);
         } catch (DepositModuleException e) {
             return null;
         }
@@ -276,7 +276,7 @@ public class BankAccountTransactionServiceImpl extends AbstractServiceImpl imple
     }
 
     private Optional<String> ledgerAccountId(AccountReferenceBO reference) {
-        return BankAccountService.getOptionalAccountByIbanAndCurrency(reference.getIban(), reference.getCurrency())
+        return bankAccountService.getOptionalAccountByIbanAndCurrency(reference.getIban(), reference.getCurrency())
                        .map(BankAccountBO::getLinkedAccounts);
     }
 }
