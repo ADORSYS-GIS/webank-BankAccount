@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
      @Override
      public ResponseEntity<AccountDetailsTO> createBankAccount(String authorizationHeader, AccountDetailsTO accountDetailsTO) {
         // Read the mobile number
-        accountDetailsTO.getMsisdn();
-        // Read the iban
-        accountDetailsTO.getIban();
-        bankAccountService.createNewAccount(null, authorizationHeader, authorizationHeader);
+//        accountDetailsTO.getMsisdn();
+//        // Read the iban
+//        accountDetailsTO.getIban();
+//        bankAccountService.createNewAccount(null, authorizationHeader, authorizationHeader);
          return null;
      }
  }
