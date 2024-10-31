@@ -45,8 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final SerializeService serializeService;
     private final PostingMockService postingService;
     private final LedgerService ledgerService;
-    private final BankAccountConfigService BankAccountConfigService;
-    private final ObjectMapper objectMapper;
+    private final BankAccountConfigService bankAccountConfigService;
 
     @Override
     public Map<String, String> bookMockTransaction(List<MockBookingDetailsBO> trDetails) {
@@ -93,7 +92,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private LedgerBO loadLedger() {
-        String ledgerName = BankAccountConfigService.getLedger();
+        String ledgerName = bankAccountConfigService.getLedger();
         return ledgerService.findLedgerByName(ledgerName)
                        .orElseThrow(() -> new IllegalStateException(String.format("Ledger with name %s not found", ledgerName)));
     }
