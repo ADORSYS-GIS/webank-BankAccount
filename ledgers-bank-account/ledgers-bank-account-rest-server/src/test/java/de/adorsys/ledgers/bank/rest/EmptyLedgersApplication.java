@@ -3,11 +3,10 @@
  * All rights are reserved.
  */
 
-package de.adorsys.ledgers.deposit.rest;
+package de.adorsys.ledgers.bank.rest;
 
 import de.adorsys.ledgers.bank.api.client.ExchangeRateClient;
 import de.adorsys.ledgers.bank.api.service.EnableBankAccountService;
-import de.adorsys.ledgers.bank.rest.EnableLedgersBankAccountRest;
 import de.adorsys.ledgers.postings.impl.EnablePostingService;
 import de.adorsys.ledgers.util.EnableUtils;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,8 +22,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnablePostingService
 @EnableLedgersBankAccountRest
 @EnableFeignClients(basePackageClasses = ExchangeRateClient.class)
-public class LedgersBankAccountRestApplication {
+public class EmptyLedgersApplication {
     public static void main(String[] args) {
-        new SpringApplicationBuilder(LedgersBankAccountRestApplication.class).run(args);
+        new SpringApplicationBuilder(EmptyLedgersApplication.class).run(args);
     }
 }
