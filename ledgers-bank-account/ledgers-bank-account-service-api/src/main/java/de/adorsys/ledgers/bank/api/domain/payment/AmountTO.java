@@ -10,12 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AmountTO {
-    private Currency currency;
+    private String currency;
     private BigDecimal amount;
 }
