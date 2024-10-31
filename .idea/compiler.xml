@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Annotation profile for Ledgers" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -15,7 +14,6 @@
         </processorPath>
         <module name="ledgers-bank-account-rest-api" />
         <module name="ledgers-bank-account-rest-server" />
-        <module name="ledgers-bank-account-rest-client" />
         <module name="ledgers-bank-account-service-api" />
         <module name="ledgers-bank-account-service-impl" />
         <module name="ledgers-bank-account-repository" />
@@ -27,7 +25,6 @@
       <module name="ledgers-bank-account" options="-parameters" />
       <module name="ledgers-bank-account-repository" options="-parameters" />
       <module name="ledgers-bank-account-rest-api" options="-parameters" />
-      <module name="ledgers-bank-account-rest-client" options="-parameters" />
       <module name="ledgers-bank-account-rest-server" options="-parameters" />
       <module name="ledgers-bank-account-service-api" options="-parameters" />
       <module name="ledgers-bank-account-service-impl" options="-parameters" />
