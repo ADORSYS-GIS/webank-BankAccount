@@ -1,22 +1,20 @@
 # Deposit Account Service (DAS) - ARC42 Architecture Documentation
 
 ## Table of Contents
-1. [Introduction](#1-introduction)
-2. [Architecture Constraints](#2-architecture-constraints)
-3. [System Scope and Context](#3-system-scope-and-context)
-4. [Solution Strategy](#4-solution-strategy)
-5. [Building Block View](#5-building-block-view)
-6. [Runtime View](#6-runtime-view)
-7. [Deployment View](#7-deployment-view)
-8. [Cross-cutting Concepts](#8-cross-cutting-concepts)
-9. [Architecture Decisions](#9-architecture-decisions)
-10. [Quality Requirements](#10-quality-requirements)
-11. [Risks and Technical Debt](#11-risks-and-technical-debt)
-12. [Product Management](#12-product-management)
-13. [Glossary](#13-glossary)
-14. [Appendix](#14-appendix)
-
----
+1. [Introduction](#introduction)
+2. [Architecture Constraints](#architecture-constraints)
+3. [System Scope and Context](#system-scope-and-context)
+4. [Solution Strategy](#solution-strategy)
+5. [Building Block View](#building-block-view)
+6. [Runtime View](#runtime-view)
+7. [Deployment View](#deployment-view)
+8. [Cross-cutting Concepts](#cross-cutting-concepts)
+9. [Architecture Decisions](#architecture-decisions)
+10. [Quality Requirements](#quality-requirements)
+11. [Risks and Technical Debt](#risks-and-technical-debt)
+12. [Product Management](#product-management)
+13. [Glossary](#glossary)
+14. [Appendix](#appendix)
 
 ## 1. Introduction
 ### Document Goals
@@ -55,9 +53,9 @@ DAS utilizes a layered architecture for clear separation of concerns, modularity
 ## 5. Building Block View
 ### Overview
 The DAS module is composed of three main components:
-1. **Account Registration**: Manages account creation and data validation.
-2. **Balance Inquiry**: Handles real-time balance retrieval.
-3. **Transaction History**: Logs, retrieves, and filters transaction data.
+- **Account Registration**: Manages account creation and data validation.
+- **Balance Inquiry**: Handles real-time balance retrieval.
+- **Transaction History**: Logs, retrieves, and filters transaction data.
 
 ### Detailed View
 - **API Layer**: Communicates with users and other services.
@@ -65,41 +63,41 @@ The DAS module is composed of three main components:
 - **Data Layer**: Manages interactions with the database for account and transaction data.
 
 ## 6. Runtime View
-### Balance Inquiry and Account Registration Scenario
+### Balance Inquiry Scenario
+1. The App sends a balance request to OBS.
+2. OBS validates the account with AAS.
+3. AAS retrieves the account ID and forwards it to DAS.
+4. DAS returns the balance through AAS and OBS to the App.
 
-The following diagram illustrates the interaction between different services and components in the **DAS** system, particularly focusing on the balance inquiry, account registration, and OTP verification processes.
-
-![Account Registration and Balance Inquiry Sequence](../../webbank-BankAccount/Docs/Images/Architecture_DAS2.png)
-
-1. **Account Registration**: The **Account Holder** initiates the process by providing their phone number and public key.
-    - **Step 1**: The Online Banking System BFF sends a request with the phone number and public key to initiate registration.
-    - **Step 2**: The Pending Registration Service registers the account and sends an OTP to the account holder.
-    - **Step 3**: The user submits the OTP, which the Online Banking System BFF sends to the Pending Registration Service for verification.
-    - **Step 4**: Upon successful verification, the account is registered, and a status is returned.
-
-2. **Balance Inquiry**:
-    - **Step 5**: The Online Banking System BFF requests account creation from the Deposit Account Service, which returns the account ID and balance.
-    - **Step 6**: An access is created within the Account Access Service, linking the account ID and public key, which returns the balance to the Online Banking System BFF.
-
-3. **Transaction History Retrieval**: Once an account is active, the DAS can retrieve and filter transaction history upon request.
+![Account Registration and Balance Inquiry Sequence](Images/Architecture_DAS2.png)
 
 ### Key Scenarios
-- **Account Registration**: The user initiates account creation, and the system validates, stores, and confirms data.
-- **Transaction History Retrieval**: The user requests a filtered transaction history, which DAS retrieves accordingly.
+- **Account Registration**: User initiates account creation, and the system validates, stores, and confirms data.
+- **Transaction History Retrieval**: User requests a filtered transaction history, which DAS retrieves accordingly.
 
 ## 7. Deployment View
 ### Deployment Strategy
+#### Cloud Infrastructure
+- **Platform**: DAS is deployed on Amazon Web Services (AWS), which provides a reliable and scalable cloud environment with high availability and security.
+- **Load Balancing**: AWS Elastic Load Balancing (ELB) distributes incoming application traffic across multiple instances to ensure availability and resilience. It automatically adjusts to traffic demands, which helps maintain optimal performance during peak usage.
+- **Scaling**: AWS Auto Scaling is implemented to monitor system performance and automatically adjust capacity as needed, scaling up during high-demand periods and down when demand decreases. This ensures efficient use of resources and cost management.
 
-- **Cloud Infrastructure**
-    - **Platform**: DAS is deployed on Amazon Web Services (AWS), which provides a reliable and scalable cloud environment with high availability and security.
-    - **Load Balancing**: AWS Elastic Load Balancing (ELB) distributes incoming application traffic across multiple instances to ensure availability and resilience.
-    - **Scaling**: AWS Auto Scaling monitors system performance and automatically adjusts capacity as needed.
+#### Container Orchestration
+- **Kubernetes (K8s)**: DAS is containerized and managed using Kubernetes, which facilitates automated deployment, scaling, and management of containerized applications.
+- **Clusters and Nodes**: The Kubernetes cluster comprises multiple nodes that host the containerized microservices. Each service, such as the API Layer, Service Layer, and Data Layer, is deployed as a Kubernetes Pod.
+- **Horizontal Pod Autoscaling**: Kubernetes enables Horizontal Pod Autoscaling (HPA) based on CPU or memory utilization, dynamically scaling the number of pods to meet current demand.
+- **Service Discovery and Load Balancing**: Kubernetes services provide internal load balancing within the cluster and manage communication between pods, ensuring seamless and reliable inter-service communication.
 
-- **Container Orchestration**
-    - **Kubernetes (K8s)**: DAS is containerized and managed using Kubernetes for deployment and scalability.
+#### CI/CD Pipelines
+- **Pipeline Overview**: Continuous Integration and Continuous Deployment (CI/CD) pipelines are set up to automate building, testing, and deployment processes, reducing manual intervention and ensuring rapid, reliable delivery of updates.
+- **Tools**: The CI/CD pipelines are configured with tools such as Jenkins, GitLab CI/CD, or GitHub Actions for automated workflows, integrating with AWS and Kubernetes for seamless deployment.
+- **Build Stage**: The pipeline triggers builds upon code commits or pull requests, creating Docker images for each service in DAS and pushing them to a secure container registry (e.g., AWS Elastic Container Registry (ECR)).
+- **Test Stage**: Automated tests (unit, integration, and end-to-end) run in parallel to validate changes. Any failures stop the deployment process, ensuring only fully tested code reaches production.
+- **Deployment Stage**: Upon passing all tests, Kubernetes deployments are triggered, and updated containers are rolled out. Kubernetes Rolling Updates ensure zero-downtime deployment by gradually replacing instances without affecting live traffic.
 
-- **CI/CD Pipelines**
-    - Automated CI/CD pipelines are set up for building, testing, and deployment with tools like Jenkins or GitLab CI/CD, integrating with AWS and Kubernetes.
+#### Monitoring and Logging
+- **Monitoring**: Amazon CloudWatch and Prometheus are used for monitoring system performance, tracking key metrics (CPU, memory, request rates), and identifying any issues early. Kubernetes also provides native metrics for pod health and resource usage.
+- **Logging**: AWS CloudWatch Logs or ELK Stack (Elasticsearch, Logstash, Kibana) captures and organizes logs for audit, security, and troubleshooting. Logs are centralized to provide insights across all microservices and help detect anomalies or performance bottlenecks.
 
 ## 8. Cross-cutting Concepts
 ### Security
@@ -133,12 +131,10 @@ The following diagram illustrates the interaction between different services and
 - **Technical Debt**: Service module refactoring as DAS scales, and integration challenges with legacy systems.
 
 ## 12. Product Management
-- **Technology Stack**: DAS is developed with Java, Spring Boot, ReactJS, TypeScript, TailwindCSS, AWS, Kubernetes, and Keycloak for a robust and secure environment.
+### Technology Stack
+DAS is developed with Java, Spring Boot, ReactJS, TypeScript, TailwindCSS, AWS, Kubernetes, and Keycloak for a robust and secure environment.
 
 ## 13. Glossary
 - **DAS**: Deposit Account Service
 - **OBS**: Online Banking Service
 - **AAS**: Account Access Service
-
----
-
