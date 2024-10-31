@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.adorsys.ledgers</groupId>
     <artifactId>webbank-BankAccount</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
 
     <modules>
         <module>ledgers-bank-account</module>
@@ -19,7 +19,7 @@
 
     <packaging>pom</packaging>
 
-    <name>Ledgers</name>
+    <name>WeBeank - BankAccount</name>
     <description>OpenSource Implementation Of Accounting Functionalities</description>
 
     <url>https://github.com/adorsys/ledgers</url>
@@ -34,7 +34,7 @@
     <developers>
         <developer>
             <name>Francis Pouatcha</name>
-            <email>fpo@adorsys.de</email>
+            <email>francis.pouatcha@adorsys.com</email>
             <organization>adorsys GmbH &amp; Co KG</organization>
             <organizationUrl>https://www.adorsys.com</organizationUrl>
         </developer>
