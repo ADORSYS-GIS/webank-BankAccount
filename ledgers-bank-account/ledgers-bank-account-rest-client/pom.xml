@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.adorsys.ledgers</groupId>
         <artifactId>ledgers-bank-account</artifactId>
-        <version>6.1-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>ledgers-bank-account-rest-client</artifactId>
@@ -20,8 +20,7 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-bank-account-rest-api</artifactId>
-            <version>6.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

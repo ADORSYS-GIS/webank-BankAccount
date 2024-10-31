@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.List;
 
 
@@ -49,7 +48,7 @@ public class AccountDetailsTO {
      * 00499113606980 (Adorsys tel nr)
      */
     private String msisdn;
-    private Currency currency;
+    private String currency;
     private String name;
     private String displayName;
     private String product;

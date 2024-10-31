@@ -6,15 +6,19 @@
 package de.adorsys.ledgers.bank.api.resource;
 
 import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
-
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-import static de.adorsys.ledgers.bank.api.utils.Constants.AUTHORIZATION;;
+import static de.adorsys.ledgers.bank.api.utils.Constants.AUTHORIZATION;
+
+;
 
 
 @Tag(name = "LDG??? - Accounts (Deposit Account)", description = "Provides access to the deposit account resource management interface")
@@ -34,6 +38,6 @@ public interface AccountMgmResourceAPI {
             @ApiResponse(responseCode = "200", description = "Account creation successful")
     })
     @PostMapping
-    ResponseEntity<AccountDetailsTO> createBankAccount(@RequestHeader(AUTHORIZATION) String authorizationHeader,
+    ResponseEntity<AccountDetailsTO> createBankAccount(@Parameter(hidden = true) @RequestHeader(AUTHORIZATION) String authorizationHeader,
                                                      @RequestBody AccountDetailsTO accountDetailsTO);
 }

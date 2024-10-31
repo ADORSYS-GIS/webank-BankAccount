@@ -12,7 +12,7 @@
     <parent>
         <groupId>de.adorsys.ledgers</groupId>
         <artifactId>ledgers-bank-account</artifactId>
-        <version>6.1-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -38,7 +38,6 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-utils</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- spring dependencies -->
@@ -148,16 +147,6 @@
             <artifactId>javatar-commons</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- Need these service because we are activating the module from their
-            implementation packages.
-        <dependency>
-            <groupId>de.adorsys.ledgers</groupId>
-            <artifactId>ledgers-sca-service-impl</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
--->
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-bank-account-service-impl</artifactId>
@@ -167,14 +156,13 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-postings-service-impl</artifactId>
-            <version>${project.version}</version>
+            <version>${ledgers.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-postings-repository</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -190,14 +178,4 @@
             <artifactId>commons-validator</artifactId>
         </dependency>
     </dependencies>
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                &lt;!&ndash; Use the latest version if available &ndash;&gt;-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
-
 </project>

@@ -13,6 +13,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
         <module name="ledgers-bank-account-rest-api" />
+        <module name="ledgers-bank-account-rest-client" />
         <module name="ledgers-bank-account-rest-server" />
         <module name="ledgers-bank-account-service-api" />
         <module name="ledgers-bank-account-service-impl" />
@@ -22,13 +23,13 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ledgers" options="-parameters" />
       <module name="ledgers-bank-account" options="-parameters" />
       <module name="ledgers-bank-account-repository" options="-parameters" />
       <module name="ledgers-bank-account-rest-api" options="-parameters" />
       <module name="ledgers-bank-account-rest-server" options="-parameters" />
       <module name="ledgers-bank-account-service-api" options="-parameters" />
       <module name="ledgers-bank-account-service-impl" options="-parameters" />
-      <module name="webbank-BankAccount" options="-parameters" />
     </option>
   </component>
 </project>

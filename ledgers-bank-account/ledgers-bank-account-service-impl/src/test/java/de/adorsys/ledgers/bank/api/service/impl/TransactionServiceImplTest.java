@@ -49,12 +49,12 @@ class TransactionServiceImplTest {
     @Mock
     private LedgerService ledgerService;
     @Mock
-    private BankAccountConfigService BankAccountConfigService;
+    private BankAccountConfigService bankAccountConfigService;
 
     @Test
     void bookMockTransaction_depositPosting() {
         // Given
-        when(BankAccountConfigService.getLedger()).thenReturn("ledger");
+        when(bankAccountConfigService.getLedger()).thenReturn("ledger");
         when(ledgerService.findLedgerByName(any())).thenReturn(Optional.of(getLedger()));
 
         // When
@@ -62,14 +62,14 @@ class TransactionServiceImplTest {
 
         // Then
         assertTrue(map.isEmpty());
-        verify(BankAccountConfigService, times(1)).getLedger();
+        verify(bankAccountConfigService, times(1)).getLedger();
         verify(ledgerService, times(1)).findLedgerByName("ledger");
     }
 
     @Test
     void bookMockTransaction_paymentPosting() {
         // Given
-        when(BankAccountConfigService.getLedger()).thenReturn("ledger");
+        when(bankAccountConfigService.getLedger()).thenReturn("ledger");
         when(ledgerService.findLedgerByName(any())).thenReturn(Optional.of(getLedger()));
 
         // When
@@ -77,14 +77,14 @@ class TransactionServiceImplTest {
 
         // Then
         assertTrue(map.isEmpty());
-        verify(BankAccountConfigService, times(1)).getLedger();
+        verify(bankAccountConfigService, times(1)).getLedger();
         verify(ledgerService, times(1)).findLedgerByName("ledger");
     }
 
     @Test
     void bookMockTransaction_ledgersNotFound() {
         // Given
-        when(BankAccountConfigService.getLedger()).thenReturn("ledger");
+        when(bankAccountConfigService.getLedger()).thenReturn("ledger");
         List<MockBookingDetailsBO> detailsBOList = Collections.singletonList(getMockBookingDetailsBO(BigDecimal.TEN));
         // Then
         assertThrows(IllegalStateException.class, () -> transactionService.bookMockTransaction(detailsBOList));
