@@ -14,25 +14,8 @@
 #
 server:
   # Authorization HTTP header requires to enlarge max header size.
-  max-http-header-size: 65000
+  max-http-request-header-size: 65KB
   port: 8088
-
-springdoc.swagger-ui.oauth.clientId: ${keycloak.resource}
-springdoc.swagger-ui.oauth.clientSecret: ${keycloak.credentials.secret}
-
-keycloak:
-  auth-server-url: http://localhost:8080
-  realm: ledgers
-  resource: ledgers-client
-  public-client: false
-  principal-attribute: preferred_username
-  credentials:
-    secret: a61a81cd-7178-40d8-8386-ed02791e6592 #Here should be personal generated secret for client (swap public to 'private?' generate secret, swap to public again)
-
-keycloak-sync:
-  admin:
-    username: admin
-    password: admin
 
 springdoc:
   api-docs:
@@ -44,16 +27,11 @@ springdoc:
 spring:
   main:
     allow-bean-definition-overriding: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${keycloak.auth-server-url}/realms/ledgers
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-  application.name: ledgers
+  application.name: ledgers-bank-account
   servlet.multipart.enabled: true
   servlet.multipart.file-size-threshold: 2KB
   servlet.multipart.max-file-size: 2MB
@@ -135,50 +113,6 @@ ledgers:
         sca: 10800
         full: 7776000
 
-  sca:
-    authCode.failed.max: 3
-    authCode:
-      validity.seconds: 180
-      expiration:
-        cron: "*/5 0 0 * * *" # every 5 seconds
-      email:
-        subject: "Your TAN from MockBank"
-        body: "TAN: %s"
-        from: noreply@adorsys.de
-      phone:
-        subject: "Your TAN from MockBank"
-      push:
-        body: "User: %s initiated an operation : %s requiring TAN confirmation, TAN is: %s"
-      app_otp:
-        template: "Do you confirm your %s id: %s " #Do you confirm your 'Payment/Consent' id: 'XXXX'
-        socket_service:
-          httpMethod: POST
-          url: http://localhost:8090/api/v1/decoupled/message
-    multilevel.enabled: true
-    authorisation_confirmation_enabled: false
-    final.weight: 100
-    challenge_data:
-      path:
-
-  verify:
-    template:
-      subject: "Please verify your email address"
-      from: noreply@adorsys.de
-      message:
-        "Hello. Please verify your email address by clicking the following link: %s
-        \n
-        Please note that the above link is only valid until %s.
-        \n
-        This is an automatically generated email – please do not reply to it. If you have any queries regarding your order, please email us at info@tpp.com.
-        \n\n
-        Best wishes,\n
-        ModelBank team"
-    ext_base_path: http://localhost:8088
-    endpoint: /emails/email
-    page:
-      success: http://localhost:4400/email-confirmation/success
-      fail: http://localhost:4400/email-confirmation/fail
-
   #Supported currencies
   currency:
     default: EUR
@@ -187,26 +121,13 @@ ledgers:
       - USD
       - CHF
       - GBP
+      - XAF
 
   #TanEncryption
   application:
     security:
       masterPassword: $VoL973@sd
       encryptorAlgorithm: PBEWITHSHA1ANDDESEDE
-
-  # Oauth properties
-  oauth:
-    ext_base_path: http://localhost:4400
-    lifetime:
-      auth_code: 2
-      access_token: 5
-      refresh_token: 15
-    authorization_endpoint: ${ledgers.ext_oauth.base_path}/oauth/authorise
-    token_endpoint: ${ledgers.oauth.ext_base_path}/oauth/token
-    response_types_supported:
-      - CODE
-    grant_types_supported:
-      - AUTHORISATION_CODE
 
   payment_validator:
     allow_past_dates: false
