@@ -5,13 +5,13 @@
 
 package de.adorsys.ledgers.bank.api.service.impl.test;
 
-import de.adorsys.ledgers.bank.api.client.ExchangeRateClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import de.adorsys.ledgers.bank.api.service.EnableBankAccountService;
+import de.adorsys.ledgers.bank.server.utils.client.ExchangeRateClient;
 import de.adorsys.ledgers.postings.impl.EnablePostingService;
 
 @SpringBootApplication

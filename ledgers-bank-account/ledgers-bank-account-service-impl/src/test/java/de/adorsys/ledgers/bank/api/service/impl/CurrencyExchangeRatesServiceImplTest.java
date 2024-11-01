@@ -5,15 +5,26 @@
 
 package de.adorsys.ledgers.bank.api.service.impl;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.ledgers.bank.api.client.ExchangeRateClient;
-import de.adorsys.ledgers.bank.api.domain.ExchangeRateBO;
-import de.adorsys.ledgers.util.exception.DepositModuleException;
-import feign.FeignException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import static org.hamcrest.MatcherAssert.assertThat;
+//NOPMD
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+//NOPMD
+import java.util.Collections;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,17 +35,16 @@ import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.*;//NOPMD
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;//NOPMD
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import de.adorsys.ledgers.bank.api.domain.ExchangeRateBO;
+import de.adorsys.ledgers.bank.server.utils.client.ExchangeRateClient;
+import de.adorsys.ledgers.util.exception.DepositModuleException;
+import feign.FeignException;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 @ExtendWith(MockitoExtension.class)
 class CurrencyExchangeRatesServiceImplTest {

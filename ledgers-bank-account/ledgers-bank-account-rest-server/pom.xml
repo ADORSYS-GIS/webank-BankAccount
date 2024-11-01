@@ -39,6 +39,11 @@
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-utils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.ledgers</groupId>
+            <artifactId>webank-server-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- spring dependencies -->
 

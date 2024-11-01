@@ -5,18 +5,31 @@
 
 package de.adorsys.ledgers.bank.api.exception;
 
-import de.adorsys.ledgers.util.exception.DepositErrorCode;
-import org.springframework.http.HttpStatus;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.COULD_NOT_EXECUTE_STATEMENT;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.CURRENCY_NOT_SUPPORTED;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.DEPOSIT_ACCOUNT_EXISTS;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.DEPOSIT_ACCOUNT_NOT_FOUND;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.DEPOSIT_OPERATION_FAILURE;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.INSUFFICIENT_FUNDS;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.PAYMENT_NOT_FOUND;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.PAYMENT_PROCESSING_FAILURE;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.PAYMENT_WITH_ID_EXISTS;
+import static de.adorsys.ledgers.bank.api.exception.AccountErrorCode.UNSUPPORTED_CREDIT_LIMIT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.EXPECTATION_FAILED;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.EnumMap;
 
-import static de.adorsys.ledgers.util.exception.DepositErrorCode.*;
-import static org.springframework.http.HttpStatus.*;
+import org.springframework.http.HttpStatus;
 
-public class DepositHttpStatusResolver {
-    private static final EnumMap<DepositErrorCode, HttpStatus> container = new EnumMap<>(DepositErrorCode.class);
+public class AccountHttpStatusResolver {
+    private static final EnumMap<AccountErrorCode, HttpStatus> container = new EnumMap<>(AccountErrorCode.class);
 
-    private DepositHttpStatusResolver() {
+    private AccountHttpStatusResolver() {
     }
 
     static {
@@ -53,7 +66,7 @@ public class DepositHttpStatusResolver {
         // This error is thrown when attempting to create a deposit account that already exists.
         container.put(DEPOSIT_ACCOUNT_EXISTS, CONFLICT);
     }
-    public static HttpStatus resolveHttpStatusByCode(DepositErrorCode code) {
+    public static HttpStatus resolveHttpStatusByCode(AccountErrorCode code) {
         return container.getOrDefault(code, BAD_REQUEST) ;
     }
 }

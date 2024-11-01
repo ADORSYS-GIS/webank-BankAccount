@@ -18,9 +18,9 @@ import de.adorsys.ledgers.bank.api.domain.account.AccountBalanceTO;
 import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
 import de.adorsys.ledgers.bank.api.domain.account.TransactionTO;
 import de.adorsys.ledgers.bank.api.resource.AccountRestAPI;
+import de.adorsys.ledgers.bank.api.resource.CustomPage;
 import de.adorsys.ledgers.bank.api.service.BankAccountService;
 import de.adorsys.ledgers.bank.rest.annotation.BankAccountUserResource;
-import de.adorsys.ledgers.util.domain.CustomPageImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +58,7 @@ public class AccountResource implements AccountRestAPI {
 
     @Override
     @PreAuthorize("hasAccessToAccount(#accountId)")
-    public ResponseEntity<CustomPageImpl<TransactionTO>> getTransactionByDatesPaged(String accountId, LocalDateTime dateFrom, LocalDateTime dateTo, int page, int size) {
+    public ResponseEntity<CustomPage<TransactionTO>> getTransactionByDatesPaged(String accountId, LocalDateTime dateFrom, LocalDateTime dateTo, int page, int size) {
 //        dateChecker(dateFrom, dateTo);
 //        CustomPageableImpl pageable = new CustomPageableImpl(page, size);
 //        CustomPageImpl<TransactionTO> customPage = bankAccountService.getTransactionsByDatesPaged(accountId, dateFrom, dateTo, pageable);

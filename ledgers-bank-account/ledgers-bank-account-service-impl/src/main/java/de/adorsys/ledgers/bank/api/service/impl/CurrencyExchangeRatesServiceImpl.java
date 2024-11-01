@@ -5,19 +5,21 @@
 
 package de.adorsys.ledgers.bank.api.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import de.adorsys.ledgers.bank.api.client.ExchangeRateClient;
-import de.adorsys.ledgers.bank.api.domain.ExchangeRateBO;
-import de.adorsys.ledgers.bank.api.service.CurrencyExchangeRatesService;
-import de.adorsys.ledgers.util.exception.DepositErrorCode;
-import de.adorsys.ledgers.util.exception.DepositModuleException;
-import feign.FeignException;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+//NOPMD
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONObject;
 import org.json.XML;
@@ -26,13 +28,20 @@ import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;//NOPMD
-import java.util.function.BiConsumer;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import de.adorsys.ledgers.bank.api.domain.ExchangeRateBO;
+import de.adorsys.ledgers.bank.api.service.CurrencyExchangeRatesService;
+import de.adorsys.ledgers.bank.server.utils.client.ExchangeRateClient;
+import de.adorsys.ledgers.util.exception.DepositErrorCode;
+import de.adorsys.ledgers.util.exception.DepositModuleException;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service

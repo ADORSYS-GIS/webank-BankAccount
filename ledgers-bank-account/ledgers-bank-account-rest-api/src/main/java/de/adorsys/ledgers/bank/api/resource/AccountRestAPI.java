@@ -5,24 +5,6 @@
 
 package de.adorsys.ledgers.bank.api.resource;
 
-import de.adorsys.ledgers.bank.api.domain.account.AccountBalanceTO;
-import de.adorsys.ledgers.bank.api.domain.account.TransactionTO;
-import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
-import de.adorsys.ledgers.util.domain.CustomPageImpl;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import static de.adorsys.ledgers.bank.api.utils.Constants.ACCOUNT_ID;
 import static de.adorsys.ledgers.bank.api.utils.Constants.DATE_FROM_QUERY_PARAM;
 import static de.adorsys.ledgers.bank.api.utils.Constants.DATE_TO_QUERY_PARAM;
@@ -30,6 +12,26 @@ import static de.adorsys.ledgers.bank.api.utils.Constants.LOCAL_DATE_YYYY_MM_DD_
 import static de.adorsys.ledgers.bank.api.utils.Constants.PAGE;
 import static de.adorsys.ledgers.bank.api.utils.Constants.SIZE;
 import static de.adorsys.ledgers.bank.api.utils.Constants.TRANSACTION_ID;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import de.adorsys.ledgers.bank.api.domain.account.AccountBalanceTO;
+import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
+import de.adorsys.ledgers.bank.api.domain.account.TransactionTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @Tag(name = "LDG??? - Accounts", description = "Provides access to a deposit account.")
@@ -64,7 +66,7 @@ public interface AccountRestAPI {
 
     @GetMapping(path = "/{accountId}/transactions/page", params = {DATE_FROM_QUERY_PARAM, DATE_TO_QUERY_PARAM, PAGE, SIZE})
     @Operation(summary = "Find Transactions By Date", description = "Returns transactions for the given account id for certain dates, paged view")
-    ResponseEntity<CustomPageImpl<TransactionTO>> getTransactionByDatesPaged(
+    ResponseEntity<CustomPage<TransactionTO>> getTransactionByDatesPaged(
             @Parameter(name = ACCOUNT_ID)
             @PathVariable(name = ACCOUNT_ID) String accountId,
             @RequestParam(name = DATE_FROM_QUERY_PARAM, required = false) @DateTimeFormat(pattern = LOCAL_DATE_YYYY_MM_DD_FORMAT) LocalDateTime dateFrom,

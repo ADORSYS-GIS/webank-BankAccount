@@ -31,6 +31,11 @@
 
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
+            <artifactId>webank-server-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-bank-account-repository</artifactId>
             <version>${project.version}</version>
         </dependency>

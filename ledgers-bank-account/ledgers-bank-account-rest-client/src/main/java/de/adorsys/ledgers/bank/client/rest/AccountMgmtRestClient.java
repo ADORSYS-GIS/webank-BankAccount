@@ -4,5 +4,5 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(value = "ledgersAccountClient", url = LedgersURL.LEDGERS_URL, path = AccountMgmResourceAPI.BASE_PATH)
 
-    public interface AccountMgmtRestClient extends AccountMgmResourceAPI {}
+public interface AccountMgmtRestClient extends AccountMgmResourceAPI {}
 

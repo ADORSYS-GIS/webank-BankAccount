@@ -5,7 +5,6 @@
 
 package de.adorsys.ledgers.bank.api.exception;
 
-import de.adorsys.ledgers.util.exception.DepositErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -18,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @Slf4j
 class HttpStatusResolverTest {
     @Test
-    void testDepositStatusResolverCoverage() {
-        List<DepositErrorCode> codes = Arrays.asList(DepositErrorCode.values());
+    void testAccountStatusResolverCoverage() {
+        List<AccountErrorCode> codes = Arrays.asList(AccountErrorCode.values());
         codes.forEach(c -> {
-            boolean isNull = DepositHttpStatusResolver.resolveHttpStatusByCode(c) == null;
+            boolean isNull = AccountHttpStatusResolver.resolveHttpStatusByCode(c) == null;
             if (isNull) {
                 log.error("{} is missing in Resolver", c.name());
             }

@@ -15,6 +15,7 @@
 
     <modules>
         <module>ledgers-bank-account</module>
+        <module>webank-utils</module>
     </modules>
 
     <packaging>pom</packaging>
