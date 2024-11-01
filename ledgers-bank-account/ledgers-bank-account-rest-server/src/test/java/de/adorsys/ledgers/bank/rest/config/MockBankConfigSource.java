@@ -3,7 +3,7 @@
  * All rights are reserved.
  */
 
-package de.adorsys.ledgers.deposit.rest.config;
+package de.adorsys.ledgers.bank.rest.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-@Component
 public class MockBankConfigSource implements ASPSPConfigSource {
     private ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
