@@ -1,0 +1,177 @@
+# Copyright 2018-2018 adorsys GmbH & Co KG
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+server:
+  # Authorization HTTP header requires to enlarge max header size.
+  max-http-request-header-size: 65KB
+  port: 8088
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  application.name: ledgers-bank-account
+  servlet.multipart.enabled: true
+  servlet.multipart.file-size-threshold: 2KB
+  servlet.multipart.max-file-size: 2MB
+  servlet.multipart.max-request-size: 2MB
+  datasource:
+    username: ${db.user}
+    password: ${db.password}
+    url: ${db.url}
+  jpa:
+    show-sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate.globally_quoted_identifiers: false
+      hibernate.jdbc.lob.non_contextual_creation: true
+      hibernate.naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      hibernate.jdbc.batch_size: 100
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+      hibernate.batch_versioned_data: true
+    open-in-view: false
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 465
+    username: modelbank.mail@gmail.com
+    password: password
+    properties:
+      smtp:
+        auth: true
+        ssl: true
+        start-tls: false
+        from: modelbank.mail@gmail.com
+        from-display-name: Ledgers
+        envelope-from: modelbank.mail@gmail.com
+        reply-to: modelbank.mail@gmail.com
+        reply-to-display-name: Ledgers support
+
+logging:
+  level:
+    org:
+      springframework: INFO
+
+ledgers:
+  users:
+    default-migration-pin: 12345
+  xs2a:
+    funds-confirmation-user-login: admin
+    funds-confirmation-user-password: admin123
+  paymentScheduler:
+    initialDelay: 3000
+    delay: 300000      #300 000 = 5 minutes delay between execution/rescheduling operations
+
+  payment-products:
+    instant:
+      instant-sepa-credit-transfers,
+      target-2-payments,
+      domestic-swiss-credit-transfers-isr,
+      domestic-swiss-foreign-credit-transfers,
+      pain.001-swiss-six-credit-transfers,
+      pain.001-instant-sepa-credit-transfers,
+      pain.001-target-2-payments,
+    regular:
+      sepa-credit-transfers,
+      cross-border-credit-transfers,
+      domestic-swiss-credit-transfers,
+      pain.001-sepa-credit-transfers,
+      pain.001-cross-border-credit-transfers
+
+  payment_mapping.path:
+
+  token:
+    lifetime:
+      seconds:
+        sca: 10800
+        full: 7776000
+
+  #Supported currencies
+  currency:
+    default: EUR
+    currencies:
+      - EUR
+      - USD
+      - CHF
+      - GBP
+      - XAF
+
+  #TanEncryption
+  application:
+    security:
+      masterPassword: $VoL973@sd
+      encryptorAlgorithm: PBEWITHSHA1ANDDESEDE
+
+  payment_validator:
+    allow_past_dates: false
+    allow_same_end_to_end_ids: false
+# Cors configuration
+management:
+  endpoints:
+    web:
+      cors:
+        allow-credentials: true
+        allowed-origin-patterns: "*"
+        allowed-headers: Access-Control-Allow-Headers, Content-Type, Origin, X-Requested-With, Cookie, Authorization
+        allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+        max-age: 3600
+    enabled-by-default: false
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+  health:
+    mail:
+      enabled: false
+---
+spring:
+  config:
+    activate:
+      on-profile: h2
+  h2:
+    console:
+      enabled: true
+      path: /console
+
+db:
+  user: sa
+  password: sa
+  url: jdbc:h2:mem:ledgers-app;DB_CLOSE_ON_EXIT=FALSE
+# Default value set in application. de.adorsys.ledgers.middleware.client.rest.Ledgers#URL.LEDGERS_URL
+# ledgers.url: http://localhost:${server.port}
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+management.endpoints.web.exposure.include: "*"
+management.endpoints.web.exposure.exclude: env,beans

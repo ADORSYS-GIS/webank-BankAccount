@@ -100,20 +100,20 @@ class BankAccountServiceImplTest {
         when(ledgerService.findLedgerByName(any())).thenReturn(Optional.of(getLedger()));
 
         // When
-        BankAccountBO BankAccount = bankAccountService.createNewAccount(getBankAccountBO(), SYSTEM, "");
+        BankAccountBO bankAccount = bankAccountService.createNewAccount(getBankAccountBO(), SYSTEM, "");
 
         // Then
-        assertNotNull(BankAccount);
-        assertFalse(BankAccount.getId().isEmpty());
+        assertNotNull(bankAccount);
+        assertFalse(bankAccount.getId().isEmpty());
     }
 
     @Test
     void createBankAccount_account_already_exist() {
         // Given
         when(bankAccountRepository.findByIbanAndCurrency(anyString(), anyString())).thenReturn(Optional.of(getBankAccount(false, null)));
-        BankAccountBO BankAccountBO = getBankAccountBO();
+        BankAccountBO bankAccountBO = getBankAccountBO();
         // Then
-        assertThrows(DepositModuleException.class, () -> bankAccountService.createNewAccount(BankAccountBO, SYSTEM, ""));
+        assertThrows(DepositModuleException.class, () -> bankAccountService.createNewAccount(bankAccountBO, SYSTEM, ""));
     }
 
     @Test
@@ -121,10 +121,10 @@ class BankAccountServiceImplTest {
         // Given
         when(bankAccountRepository.findById(any())).thenReturn(Optional.of(getBankAccount(false, null)));
         // When
-        BankAccountDetailsBO BankAccountDetailsBO = bankAccountService.getAccountDetailsById("id", NOW, false);
+        BankAccountDetailsBO bankAccountDetailsBO = bankAccountService.getAccountDetailsById("id", NOW, false);
         // Then
-        assertNotNull(BankAccountDetailsBO);
-        assertNotNull(BankAccountDetailsBO.getAccount());
+        assertNotNull(bankAccountDetailsBO);
+        assertNotNull(bankAccountDetailsBO.getAccount());
     }
 
     @Test
@@ -465,10 +465,10 @@ class BankAccountServiceImplTest {
 
     @Test
     void changeCreditLimit() {
-        BankAccount BankAccount = getBankAccount(true, BigDecimal.TEN);
-        when(bankAccountRepository.findById(any())).thenReturn(Optional.of(BankAccount));
+        BankAccount bankAccount = getBankAccount(true, BigDecimal.TEN);
+        when(bankAccountRepository.findById(any())).thenReturn(Optional.of(bankAccount));
         bankAccountService.changeCreditLimit(ACCOUNT_ID, BigDecimal.ONE);
-        assertEquals(0, BankAccount.getCreditLimit().compareTo(BigDecimal.ONE));
+        assertEquals(0, bankAccount.getCreditLimit().compareTo(BigDecimal.ONE));
     }
 
 }

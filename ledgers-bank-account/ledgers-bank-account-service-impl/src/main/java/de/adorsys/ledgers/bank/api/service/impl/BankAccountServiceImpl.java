@@ -47,20 +47,20 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
     private static final String MSG_ACCOUNT_NOT_FOUND = "Account with id %s not found";
     private static final String ADDITIONAL_INFO_MESSAGE = "Transaction was posted in Ledgers, debtorName:%s, creditorName:%s, valueDate:%s";
 
-    private final BankAccountRepository BankAccountRepository;
-    private final BankAccountMapper BankAccountMapper = Mappers.getMapper(BankAccountMapper.class);
+    private final BankAccountRepository bankAccountRepository;
+    private final BankAccountMapper bankAccountMapper = Mappers.getMapper(BankAccountMapper.class);
     private final AccountStmtService accountStmtService;
     private final PostingService postingService;
     private final TransactionDetailsMapper transactionDetailsMapper;
     private final CurrencyExchangeRatesService exchangeRatesService;
 
-    public BankAccountServiceImpl(BankAccountConfigService BankAccountConfigService,
-                                     LedgerService ledgerService, BankAccountRepository BankAccountRepository,
+    public BankAccountServiceImpl(BankAccountConfigService bankAccountConfigService,
+                                     LedgerService ledgerService, BankAccountRepository bankAccountRepository,
                                      AccountStmtService accountStmtService,
                                      PostingService postingService, TransactionDetailsMapper transactionDetailsMapper,
                                      CurrencyExchangeRatesService exchangeRatesService) {
-        super(BankAccountConfigService, ledgerService);
-        this.BankAccountRepository = BankAccountRepository;
+        super(bankAccountConfigService, ledgerService);
+        this.bankAccountRepository = bankAccountRepository;
         this.accountStmtService = accountStmtService;
         this.postingService = postingService;
         this.transactionDetailsMapper = transactionDetailsMapper;
@@ -69,7 +69,7 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
 
     @Override
     public List<BankAccountBO> getAccountsByIbanAndParamCurrency(String iban, String currency) {
-        return BankAccountMapper.toBankAccountListBO(BankAccountRepository.findAllByIbanAndCurrencyContaining(iban, currency));
+        return bankAccountMapper.toBankAccountListBO(bankAccountRepository.findAllByIbanAndCurrencyContaining(iban, currency));
     }
 
     @Override
@@ -92,14 +92,14 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
 
     @Override
     public Optional<BankAccountBO> getOptionalAccountByIbanAndCurrency(String iban, Currency currency) {
-        return BankAccountRepository.findByIbanAndCurrency(iban, getCurrencyOrEmpty(currency))
-                       .map(BankAccountMapper::toBankAccountBO);
+        return bankAccountRepository.findByIbanAndCurrency(iban, getCurrencyOrEmpty(currency))
+                       .map(bankAccountMapper::toBankAccountBO);
     }
 
     @Override
     public Optional<BankAccountBO> getOptionalAccountById(String accountId) {
-        return BankAccountRepository.findById(accountId)
-                       .map(BankAccountMapper::toBankAccountBO);
+        return bankAccountRepository.findById(accountId)
+                       .map(bankAccountMapper::toBankAccountBO);
     }
 
     @Override
@@ -114,8 +114,8 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
 
     @Override
     public BankAccountDetailsBO getAccountDetailsById(String accountId, LocalDateTime refTime, boolean withBalances) {
-        BankAccountBO BankAccountBO = getBankAccountById(accountId);
-        return new BankAccountDetailsBO(BankAccountBO, getBalancesList(BankAccountBO, withBalances, refTime));
+        BankAccountBO bankAccountBO = getBankAccountById(accountId);
+        return new BankAccountDetailsBO(bankAccountBO, getBalancesList(bankAccountBO, withBalances, refTime));
     }
 
     @Override
@@ -161,13 +161,13 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
 
     @Override
     public String readIbanById(String id) {
-        return BankAccountRepository.findById(id).map(BankAccount::getIban).orElse(null);
+        return bankAccountRepository.findById(id).map(BankAccount::getIban).orElse(null);
     }
 
     @Override
     public List<BankAccountDetailsBO> findDetailsByBranch(String branch) {
-        List<BankAccount> accounts = BankAccountRepository.findByBranch(branch);
-        List<BankAccountBO> accountsBO = BankAccountMapper.toBankAccountListBO(accounts);
+        List<BankAccount> accounts = bankAccountRepository.findByBranch(branch);
+        List<BankAccountBO> accountsBO = bankAccountMapper.toBankAccountListBO(accounts);
         List<BankAccountDetailsBO> accountDetails = new ArrayList<>();
         for (BankAccountBO accountBO : accountsBO) {
             accountDetails.add(new BankAccountDetailsBO(accountBO, Collections.emptyList()));
@@ -177,8 +177,8 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
 
     @Override
     public Page<BankAccountDetailsBO> findDetailsByBranchPaged(String branch, String queryParam, boolean withBalance, Pageable pageable) {
-        return BankAccountRepository.findByBranchAndIbanContaining(branch, queryParam, pageable)
-                       .map(BankAccountMapper::toBankAccountBO)
+        return bankAccountRepository.findByBranchAndIbanContaining(branch, queryParam, pageable)
+                       .map(bankAccountMapper::toBankAccountBO)
                        .map(d -> new BankAccountDetailsBO(d, getBalancesList(d, withBalance, LocalDateTime.now())));
     }
 
@@ -187,9 +187,9 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
     @Transactional
     public void changeAccountsBlockedStatus(String userId, boolean isSystemBlock, boolean lockStatusToSet) {
         if (isSystemBlock) {
-            BankAccountRepository.updateSystemBlockedStatus(userId, lockStatusToSet);
+            bankAccountRepository.updateSystemBlockedStatus(userId, lockStatusToSet);
         } else {
-            BankAccountRepository.updateBlockedStatus(userId, lockStatusToSet);
+            bankAccountRepository.updateBlockedStatus(userId, lockStatusToSet);
         }
     }
 
@@ -198,16 +198,16 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
         List<Boolean> blockedQueryParam = Optional.ofNullable(blocked)
                                                   .map(Arrays::asList)
                                                   .orElseGet(() -> Arrays.asList(true, false));
-        return BankAccountRepository.findByBranchInAndIbanContainingAndBlockedInAndSystemBlockedFalse(branchIds, iban, blockedQueryParam, pageable)
-                       .map(BankAccountMapper::toBankAccountBO);
+        return bankAccountRepository.findByBranchInAndIbanContainingAndBlockedInAndSystemBlockedFalse(branchIds, iban, blockedQueryParam, pageable)
+                       .map(bankAccountMapper::toBankAccountBO);
     }
 
     @Override
     public void changeAccountsBlockedStatus(Set<String> accountIds, boolean isSystemBlock, boolean lockStatusToSet) {
         if (isSystemBlock) {
-            BankAccountRepository.updateSystemBlockedStatus(accountIds, lockStatusToSet);
+            bankAccountRepository.updateSystemBlockedStatus(accountIds, lockStatusToSet);
         } else {
-            BankAccountRepository.updateBlockedStatus(accountIds, lockStatusToSet);
+            bankAccountRepository.updateBlockedStatus(accountIds, lockStatusToSet);
         }
     }
 
@@ -220,22 +220,22 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
     }
 
     @Override
-    public BankAccountBO createNewAccount(BankAccountBO BankAccountBO, String userName, String branch) {
-        checkBankAccountAlreadyExist(BankAccountBO);
-        checkCreditLimitIsCorrect(BankAccountBO.getCreditLimit());
-        BankAccount BankAccount = BankAccountMapper.toBankAccount(BankAccountBO);
-        BankAccount.setId(Ids.id());
-        BankAccount.setName(userName);
+    public BankAccountBO createNewAccount(BankAccountBO bankAccountBO, String userName, String branch) {
+        checkBankAccountAlreadyExist(bankAccountBO);
+        checkCreditLimitIsCorrect(bankAccountBO.getCreditLimit());
+        BankAccount bankAccount = bankAccountMapper.toBankAccount(bankAccountBO);
+        bankAccount.setId(Ids.id());
+        bankAccount.setName(userName);
 
         LedgerAccountBO parentLedgerAccount = new LedgerAccountBO(bankAccountConfigService.getBankParentAccount(), loadLedger());
-        LedgerAccountBO ledgerAccount = new LedgerAccountBO(BankAccount.getIban(), parentLedgerAccount);
+        LedgerAccountBO ledgerAccount = new LedgerAccountBO(bankAccount.getIban(), parentLedgerAccount);
 
         String accountId = ledgerService.newLedgerAccount(ledgerAccount, userName).getId();
-        BankAccount.setLinkedAccounts(accountId);
+        bankAccount.setLinkedAccounts(accountId);
 
-        Optional.ofNullable(branch).ifPresent(BankAccount::setBranch);
-        BankAccount saved = BankAccountRepository.save(BankAccount);
-        return BankAccountMapper.toBankAccountBO(saved);
+        Optional.ofNullable(branch).ifPresent(bankAccount::setBranch);
+        BankAccount saved = bankAccountRepository.save(bankAccount);
+        return bankAccountMapper.toBankAccountBO(saved);
     }
 
     private TransactionDetailsBO enrichAdditionalInformation(TransactionDetailsBO transactionDetailsBO) {
@@ -253,12 +253,12 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
         }
     }
 
-    private void checkBankAccountAlreadyExist(BankAccountBO BankAccountBO) {
-        boolean isExistingAccount = BankAccountRepository.findByIbanAndCurrency(BankAccountBO.getIban(), getCurrencyOrEmpty(BankAccountBO.getCurrency()))
+    private void checkBankAccountAlreadyExist(BankAccountBO bankAccountBO) {
+        boolean isExistingAccount = bankAccountRepository.findByIbanAndCurrency(bankAccountBO.getIban(), getCurrencyOrEmpty(bankAccountBO.getCurrency()))
                                             .isPresent();
         if (isExistingAccount) {
             String message = format("Deposit account already exists. IBAN %s. Currency %s",
-                                    BankAccountBO.getIban(), BankAccountBO.getCurrency().getCurrencyCode());
+                                    bankAccountBO.getIban(), bankAccountBO.getCurrency().getCurrencyCode());
             throw DepositModuleException.builder()
                           .errorCode(DEPOSIT_ACCOUNT_EXISTS)
                           .devMsg(message)
@@ -279,11 +279,11 @@ public class BankAccountServiceImpl extends AbstractServiceImpl implements BankA
     }
 
     private BankAccountBO getBankAccountById(String accountId) {
-        return BankAccountMapper.toBankAccountBO(getBankAccountEntityById(accountId));
+        return bankAccountMapper.toBankAccountBO(getBankAccountEntityById(accountId));
     }
 
     private BankAccount getBankAccountEntityById(String accountId) {
-        return BankAccountRepository.findById(accountId)
+        return bankAccountRepository.findById(accountId)
                        .orElseThrow(() -> DepositModuleException.builder()
                                                   .errorCode(DEPOSIT_ACCOUNT_NOT_FOUND)
                                                   .devMsg(format("Account with id: %s not found!", accountId))

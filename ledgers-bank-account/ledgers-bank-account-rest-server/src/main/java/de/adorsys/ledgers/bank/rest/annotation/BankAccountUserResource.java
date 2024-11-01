@@ -19,4 +19,4 @@ import java.lang.annotation.Target;
 @Target({ java.lang.annotation.ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface DepositUserResource {}
+public @interface BankAccountUserResource {}

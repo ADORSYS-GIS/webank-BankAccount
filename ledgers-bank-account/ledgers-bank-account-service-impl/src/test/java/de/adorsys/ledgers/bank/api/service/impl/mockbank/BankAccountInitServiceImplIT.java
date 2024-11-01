@@ -25,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class BankAccountInitServiceImplIT {
 
     @Autowired
-    private BankAccountInitService BankAccountInitService;
+    private BankAccountInitService bankAccountInitService;
 
     @Test()
     void should_run_init_config_data_without_exception() {
-        BankAccountInitService.initConfigData();
+        bankAccountInitService.initConfigData();
         assertTrue(true);
     }
 }

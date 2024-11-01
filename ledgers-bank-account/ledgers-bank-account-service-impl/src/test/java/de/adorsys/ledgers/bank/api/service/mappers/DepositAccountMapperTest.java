@@ -28,12 +28,12 @@ class BankAccountMapperTest {
     private static final LocalDateTime CREATED = LocalDateTime.now();
 
     @InjectMocks
-    private BankAccountMapperImpl BankAccountMapper;
+    private BankAccountMapperImpl bankAccountMapper;
 
     @Test
     void toBankAccountBO() {
         // When
-        BankAccountBO account = BankAccountMapper.toBankAccountBO(getBankAccount());
+        BankAccountBO account = bankAccountMapper.toBankAccountBO(getBankAccount());
 
         //Then
         assertEquals(account, getBankAccountBO());
@@ -42,7 +42,7 @@ class BankAccountMapperTest {
     @Test
     void toBankAccount() {
         // When
-        BankAccount account = BankAccountMapper.toBankAccount(getBankAccountBO());
+        BankAccount account = bankAccountMapper.toBankAccount(getBankAccountBO());
 
         //Then
         assertEquals(account, getBankAccount());

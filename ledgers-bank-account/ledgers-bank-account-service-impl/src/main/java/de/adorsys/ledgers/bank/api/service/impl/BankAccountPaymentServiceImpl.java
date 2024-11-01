@@ -44,10 +44,10 @@ public class BankAccountPaymentServiceImpl extends AbstractServiceImpl implement
     private final BankAccountService accountService;
     private final PaymentTargetRepository targetRepository;
 
-    public BankAccountPaymentServiceImpl(BankAccountConfigService BankAccountConfigService,
+    public BankAccountPaymentServiceImpl(BankAccountConfigService bankAccountConfigService,
                                             LedgerService ledgerService, PaymentRepository paymentRepository,
                                             PaymentMapper paymentMapper, PaymentExecutionService executionService, BankAccountService accountService, PaymentTargetRepository targetRepository) {
-        super(BankAccountConfigService, ledgerService);
+        super(bankAccountConfigService, ledgerService);
         this.paymentRepository = paymentRepository;
         this.paymentMapper = paymentMapper;
         this.executionService = executionService;
