@@ -61,6 +61,7 @@ The DAS module is composed of three main components:
 - **API Layer**: Communicates with users and other services.
 - **Service Layer**: Contains business logic for account management.
 - **Data Layer**: Manages interactions with the database for account and transaction data.
+ 
 
 ## 6. Runtime View
 ### Balance Inquiry Scenario
