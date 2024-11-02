@@ -2,7 +2,7 @@
  * Copyright (c) 2018-2024 adorsys GmbH and Co. KG
  * All rights are reserved.
  */
-package de.adorsys.ledgers.bank.rest.config;
+package de.adorsys.ledgers.bank.mock.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

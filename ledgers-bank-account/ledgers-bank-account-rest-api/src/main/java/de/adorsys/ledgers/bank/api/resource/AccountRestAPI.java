@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import de.adorsys.ledgers.bank.api.domain.account.AccountBalanceTO;
 import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
 import de.adorsys.ledgers.bank.api.domain.account.TransactionTO;
+import de.adorsys.ledgers.bank.api.utils.CustomPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

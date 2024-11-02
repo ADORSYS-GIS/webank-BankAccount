@@ -5,10 +5,11 @@
 
 package de.adorsys.ledgers.bank.rest.resource;
 
-import de.adorsys.ledgers.bank.rest.EmptyLedgersApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import de.adorsys.ledgers.bank.test.empty.EmptyLedgersApplication;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

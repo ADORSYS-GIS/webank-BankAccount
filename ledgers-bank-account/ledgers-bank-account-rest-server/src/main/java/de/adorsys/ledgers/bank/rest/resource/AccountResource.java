@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,8 +17,8 @@ import de.adorsys.ledgers.bank.api.domain.account.AccountBalanceTO;
 import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
 import de.adorsys.ledgers.bank.api.domain.account.TransactionTO;
 import de.adorsys.ledgers.bank.api.resource.AccountRestAPI;
-import de.adorsys.ledgers.bank.api.resource.CustomPage;
 import de.adorsys.ledgers.bank.api.service.BankAccountService;
+import de.adorsys.ledgers.bank.api.utils.CustomPage;
 import de.adorsys.ledgers.bank.rest.annotation.BankAccountUserResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,6 @@ public class AccountResource implements AccountRestAPI {
     }
 
     @Override
-    @PreAuthorize("hasAccessToAccount(#accountId)")
     public ResponseEntity<List<AccountBalanceTO>> getBalances(String accountId) {
 //        AccountDetailsTO accountDetails = bankAccountService.getAccountDetailsById(accountId, LocalDateTime.now(), true);
 //        return ResponseEntity.ok(accountDetails.getBalances());
@@ -48,7 +46,6 @@ public class AccountResource implements AccountRestAPI {
     }
 
     @Override
-    @PreAuthorize("hasAccessToAccount(#accountId)")
     public ResponseEntity<List<TransactionTO>> getTransactionByDates(String accountId, LocalDateTime dateFrom, LocalDateTime dateTo) {
 //        dateChecker(dateFrom, dateTo);
 //        List<TransactionTO> transactions = bankAccountService.getTransactionsByDates(accountId, validDate(dateFrom), validDate(dateTo));
@@ -57,7 +54,6 @@ public class AccountResource implements AccountRestAPI {
     }
 
     @Override
-    @PreAuthorize("hasAccessToAccount(#accountId)")
     public ResponseEntity<CustomPage<TransactionTO>> getTransactionByDatesPaged(String accountId, LocalDateTime dateFrom, LocalDateTime dateTo, int page, int size) {
 //        dateChecker(dateFrom, dateTo);
 //        CustomPageableImpl pageable = new CustomPageableImpl(page, size);
@@ -67,7 +63,6 @@ public class AccountResource implements AccountRestAPI {
     }
 
     @Override
-    @PreAuthorize("hasAccessToAccount(#accountId)")
     public ResponseEntity<TransactionTO> getTransactionById(String accountId, String transactionId) {
 //        return ResponseEntity.ok(bankAccountService.getTransactionById(accountId, transactionId));
         return null;

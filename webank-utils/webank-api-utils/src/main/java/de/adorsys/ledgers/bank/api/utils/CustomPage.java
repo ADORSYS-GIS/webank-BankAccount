@@ -1,4 +1,4 @@
-package de.adorsys.ledgers.bank.api.resource;
+package de.adorsys.ledgers.bank.api.utils;
 
 import java.util.List;
 

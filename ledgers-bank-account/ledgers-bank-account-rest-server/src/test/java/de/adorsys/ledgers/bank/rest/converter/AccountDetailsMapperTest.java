@@ -5,19 +5,20 @@
 
 package de.adorsys.ledgers.bank.rest.converter;
 
-import de.adorsys.ledgers.bank.api.domain.BalanceBO;
-import de.adorsys.ledgers.bank.api.domain.BankAccountBO;
-import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
-import de.adorsys.ledgers.bank.rest.converter.AccountDetailsMapper;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
-import pro.javatar.commons.reader.YamlReader;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
+
+import de.adorsys.ledgers.bank.api.domain.BalanceBO;
+import de.adorsys.ledgers.bank.api.domain.BankAccountBO;
+import de.adorsys.ledgers.bank.api.domain.account.AccountDetailsTO;
+import pro.javatar.commons.reader.YamlReader;
 
 class AccountDetailsMapperTest {
     private AccountDetailsMapper mapper;
