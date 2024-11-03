@@ -3,15 +3,17 @@
  * All rights are reserved.
  */
 
-package de.adorsys.ledgers.bank.api.exception;
+package de.adorsys.ledgers.bank.rest.exception;
 
-import de.adorsys.ledgers.util.exception.DepositModuleException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import de.adorsys.ledgers.bank.api.exception.AccountRestException;
+import de.adorsys.ledgers.bank.api.exception.AccountHttpStatusResolver;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -36,9 +38,9 @@ public class ExceptionAdvisor {
     }
 
 
-    @ExceptionHandler(DepositModuleException.class)
-    public ResponseEntity<Map<String,String>> handleDepositModuleException(DepositModuleException ex) {
-        HttpStatus status = DepositHttpStatusResolver.resolveHttpStatusByCode(ex.getErrorCode());
+    @ExceptionHandler(AccountRestException.class)
+    public ResponseEntity<Map<String,String>> handleDepositModuleException(AccountRestException ex) {
+        HttpStatus status = AccountHttpStatusResolver.resolveHttpStatusByCode(ex.getErrorCode());
         Map<String, String> body = getHandlerContent(status, ex.getErrorCode().name(), null, ex.getDevMsg());
         log.error(ex.getDevMsg());
         return new ResponseEntity<>(body, status);

@@ -3,7 +3,7 @@
  * All rights are reserved.
  */
 
-package de.adorsys.ledgers.bank.api.client;
+package de.adorsys.ledgers.bank.server.utils.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

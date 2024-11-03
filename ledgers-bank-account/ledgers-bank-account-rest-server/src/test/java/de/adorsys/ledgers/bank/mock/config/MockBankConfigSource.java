@@ -3,14 +3,13 @@
  * All rights are reserved.
  */
 
-package de.adorsys.ledgers.bank.rest.config;
+package de.adorsys.ledgers.bank.mock.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import de.adorsys.ledgers.bank.api.service.domain.ASPSPConfigData;
 import de.adorsys.ledgers.bank.api.service.domain.ASPSPConfigSource;
 import de.adorsys.ledgers.bank.api.service.domain.LedgerAccountModel;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
