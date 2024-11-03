@@ -28,7 +28,6 @@
       <module name="ledgers-bank-account" options="-parameters" />
       <module name="ledgers-bank-account-repository" options="-parameters" />
       <module name="ledgers-bank-account-rest-api" options="-parameters" />
-      <module name="ledgers-bank-account-rest-client" options="-parameters" />
       <module name="ledgers-bank-account-rest-server" options="-parameters" />
       <module name="ledgers-bank-account-service-api" options="-parameters" />
       <module name="ledgers-bank-account-service-impl" options="-parameters" />
