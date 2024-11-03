@@ -21,6 +21,12 @@ pom.xml.versionsBackup
 *.iml
 *.ipr
 
+### VS Code ###
+!.vscode
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+
 ### NetBeans ###
 nbproject/private/
 build/
@@ -35,7 +41,6 @@ bin/
 *.log
 logs
 log
-.vscode
 
 .DS_Store
 .springBeans
