@@ -17,35 +17,35 @@
 14. [Appendix](#appendix)
 
 ## 1. Introduction
-### Document Goals
+### 1.1 Document Goals
 This document provides a structured technical overview of the Deposit Account Service (DAS) using the ARC42 template. Its purpose is to support stakeholders, architects, and developers in understanding the architecture and design choices of the DAS module.
 
-### Stakeholders
+### 1.2 Stakeholders
 - **Product Managers**: Define functional and business requirements.
 - **Development Teams**: Implement and maintain the service.
 - **Security and Compliance Teams**: Ensure GDPR and regulatory compliance.
 - **Operations**: Manage deployment, scalability, and monitoring.
 
 ## 2. Architecture Constraints
-### Regulatory Constraints
+### 2.1 Regulatory Constraints
 - **GDPR Compliance**: Ensures data privacy and protection for users.This version clarifies the regional applicability of GDPR while emphasizing its broader relevance.
 - **Financial Regulations**: Aligns with relevant financial regulatory standards for transaction handling and auditing.
 
-### Technical Constraints
+### 2.2 Technical Constraints
 - **Data Encryption**: Sensitive data is encrypted both at rest and in transit.
 - **Performance**: Must meet specific response time targets for balance inquiries and transaction history requests.
 
 ## 3. System Scope and Context
 
-### Business Context
+### 3.1 Business Context
 DAS is a backend module within a financial ecosystem, responsible for managing user accounts, balances, and transaction histories.
 
-### External Components
+### 3.2 External Components
 - **User App**: Provides access for end-users to manage accounts and view balances.
 - **OBS (Online Banking Service)**: This is the application that prepares information for the User App.
 - **PRS (Person Registration Service)**: Backend module responsible for the registration and management of person records.
 
-### Component Diagram
+### 3.3 Component Diagram
 ```mermaid
 graph TD
     classDef colored fill:#fff,stroke:#333,stroke-width:2px;
@@ -93,13 +93,13 @@ graph TD
 ```
 
 ## 5. Building Block View
-### Overview
+### 5.1 Overview
 The DAS module is composed of three main components:
 - **Account Registration**: Manages account creation and data validation.
 - **Balance Inquiry**: Handles real-time balance retrieval.
 - **Transaction History**: Logs, retrieves, and filters transaction data.
 
-### Detailed View
+### 5.2 Detailed View
 
 In terms of Java modules, DAS contains the following artifacts.
 
@@ -218,16 +218,16 @@ sequenceDiagram
     alt status == valid
         AAS-->>-OBS: Account Valid (accountID)
         OBS->>+DAS: Get Balance (accountID)
-        DAS-->>-OBS: Balance (amount)
-        OBS-->>-App: Balance (amount)
+        DAS-->>OBS: Balance (amount)
+        OBS-->>App: Balance (amount)
     else status == invalid
-        AAS-->>-OBS: Account Invalid
-        OBS-->>-App: Error (Invalid Account)
+        AAS-->>OBS: Account Invalid
+        OBS-->>App: Error (Invalid Account)
     end
     deactivate OBS
 ```
 
-### 6.3 Sequence Diagrams
+### 6.3 List Transactions
 
 * **List Transactions**
 
@@ -265,7 +265,7 @@ sequenceDiagram
 
 ## 7. Deployment View
 
-### Deployment Strategy
+### 7.1 Deployment Strategy
 
 #### Single App Deployment Scenario
 
@@ -325,6 +325,8 @@ A <--> C
 * **Data Consistency:** Maintaining data consistency across multiple databases can require careful design and implementation.
 * **Monitoring and Observability:** Effective monitoring and observability are crucial in a microservices architecture to track performance, identify issues, and ensure the health of the system.
 
+### 7.2 Cloud Infrastructures
+
 #### Cloud Infrastructure : AWS Example
 
 **1. Cloud Provider: AWS**
@@ -358,7 +360,7 @@ While this example uses AWS for its ease of use and wide range of services, the 
 * **Service Names:** Register each microservice with a unique name in Cloud Map.
 * **DNS Resolution:** Configure your microservices to use Cloud Map for DNS resolution, allowing them to find each other by their registered names.
 
-**Simplified Diagram:**
+**7. Simplified Diagram:**
 
 ```mermaid
 graph LR
@@ -397,16 +399,12 @@ graph LR
     MS3 --> RDS3
 ```
 
-**Key Considerations:**
+**8. Key Considerations:**
 
 * **Containerization:** Package your microservices as Docker images for easy deployment and portability.
 * **Monitoring:** Use Amazon CloudWatch to monitor your ECS cluster, ALB, and RDS instances.
 * **Logging:** Use AWS CloudWatch Logs or a centralized logging solution to collect and analyze logs from your microservices.
 * **Security:** Implement appropriate security measures, such as security groups, IAM roles, and secrets management.
-
-
-Okay, I can help you elaborate on the Kubernetes alternative to the AWS ECS approach. Here's a revised section with more details and a Kubernetes-focused diagram:
-
 
 #### Cloud Infrastructure : Kubernetes Example 
 
@@ -445,7 +443,7 @@ While the previous example showcased AWS ECS, Kubernetes offers a powerful and w
 
 * **Kubernetes Service Discovery:** Kubernetes provides built-in service discovery. Services can discover each other using their service names.
 
-**Simplified Diagram:**
+**8. Simplified Diagram:**
 
 ```mermaid
 graph LR
@@ -482,17 +480,18 @@ graph LR
     MS3 --> DB
 ```
 
-**Key Considerations:**
+**9. Key Considerations:**
 
 * **Containerization:** Package your microservices as Docker images.
 * **Monitoring:** Use Kubernetes monitoring tools (e.g., Prometheus) to monitor your cluster and applications.
 * **Logging:**  Use a centralized logging system to collect and analyze logs from your pods.
 * **Security:** Implement security best practices, such as network policies, role-based access control (RBAC), and secrets management.
 
-
-#### CI/CD Pipelines
+### 7.3 CI/CD Pipelines
 
 The CI/CD pipeline for DAS employs a robust and automated workflow to streamline the building and testing of the application. This approach ensures rapid and reliable delivery of updates while maintaining high code quality and minimizing manual intervention. The pipeline utilizes a GitOps approach for deployment, which will be elaborated upon in the following section.
+
+#### Build Pipelines Fundamentals
 
 *   **Pipeline Overview:** The pipeline is designed to optimize the development process for DAS, a Spring Boot application with an RDBMS backend. It leverages GitHub as the source code repository and GitHub Actions for orchestrating the CI/CD workflow. The primary goals are to accelerate release cycles, increase deployment frequency, improve code quality, and reduce manual effort.
 *   **Tools:** GitHub Actions forms the core of the CI/CD pipeline, providing a comprehensive platform for defining and executing automated workflows. It seamlessly integrates with GitHub's repository features and offers a wide range of actions for building, testing, and deploying applications.  Additional tools may include:
@@ -508,11 +507,6 @@ The CI/CD pipeline for DAS employs a robust and automated workflow to streamline
     *   **End-to-End Tests:**  Simulate real-world scenarios and user interactions to ensure the application functions correctly as a whole.
     *   **Database Integration Tests:** Validate the application's interaction with the RDBMS, including data access and persistence operations.
     Any test failures halt the pipeline, preventing faulty code from being deployed.
-
-#### Deployment with GitOps
-
-The deployment of DAS to the Kubernetes environment is managed using a GitOps approach. This involves storing all Kubernetes configuration files (deployments, services, etc.) in a Git repository, which serves as the single source of truth for the desired state of the application. A GitOps operator continuously monitors this repository and automatically applies any changes to the cluster. This pull-based deployment strategy enhances security and simplifies rollbacks. (Refer to the "GitOps in Kubernetes for DAS" section below for a detailed explanation.) 
-
 
 #### Build Process Diagram
 
@@ -532,6 +526,10 @@ This diagram outlines the key steps in the build process:
 *   **Docker Image:** Shows the creation of a Docker image containing the application.
 *   **Container Registry:** Represents the storage of the Docker image in a registry (e.g., AWS ECR).
 
+#### Deployment with GitOps
+
+The deployment of DAS to the Kubernetes environment is managed using a GitOps approach. This involves storing all Kubernetes configuration files (deployments, services, etc.) in a Git repository, which serves as the single source of truth for the desired state of the application. A GitOps operator continuously monitors this repository and automatically applies any changes to the cluster. This pull-based deployment strategy enhances security and simplifies rollbacks. (Refer to the "GitOps in Kubernetes for DAS" section below for a detailed explanation.) 
+
 
 #### Deployment Process Diagram (GitOps)
 
@@ -547,7 +545,7 @@ This diagram illustrates the GitOps deployment process:
 *   **GitOps Operator:**  Indicates the tool (e.g., Argo CD, Flux) that monitors the repository and applies changes.
 *   **Kubernetes Cluster:** Shows the target environment where the application is deployed.
 
-#### Monitoring Architecture
+### 7.4 Monitoring Architecture
 
 *   **Metrics Sources:**
     *   **Application Metrics:**  Gather key metrics from the DAS application itself, such as request latency, error rates, transaction throughput, and resource consumption (CPU, memory, threads).
@@ -580,7 +578,7 @@ graph LR
     F --> G
 ```
 
-#### Logging Architecture
+### 7.5 Logging Architecture
 
 *   **Log Sources:**
     *   **Application Logs:** Capture logs generated by the DAS application, including information about API requests, database interactions, and internal events.
@@ -616,7 +614,9 @@ graph LR
 
 ## 8. Cross-cutting Concepts
 
-### Security Architecture
+### 8.1 Security
+
+#### 8.1.1 Security Architecture
 
 Security in the DAS application is paramount and is built upon the following core principles:
 
@@ -662,14 +662,14 @@ graph LR
     Client --> A
 ```
 
-#### Data Encryption
+### 8.1.2 Data Encryption
 
 Encryption remains crucial for protecting sensitive data:
 
 *   **TLS/SSL for Transport Encryption:** All communication between clients and DAS, as well as inter-service communication, is secured using TLS/SSL to safeguard data in transit.
 *   **Encryption at Rest:** Sensitive data in databases or persistent storage is encrypted to protect against unauthorized access in case of data breaches.
 
-#### Static Code Analysis with SonarQube and GitHub Actions
+### 8.1.3 Static Code Analysis with SonarQube and GitHub Actions
 
 **Scenario:**
 
@@ -736,7 +736,7 @@ You have a Java Spring Boot application built with Maven. You want to integrate 
 - **GitHub Integration:**  Seamless integration with GitHub Actions provides a streamlined workflow.
 
 
-#### Dynamic Code Analysis with OWASP ZAP and GitHub Actions
+### 8.1.4 Dynamic Code Analysis with OWASP ZAP and GitHub Actions
 
 **Scenario:**
 
@@ -799,7 +799,7 @@ You want to use OWASP ZAP to perform dynamic security testing on your Spring Boo
 
 You're right to focus on security unit and integration tests and OWASP secure coding practices. Here's how you can implement them with concrete examples for your Java Spring Boot application:
 
-#### Security Unit and Integration Tests
+### 8.1.5 Security for Unit and Integration Tests
 
 * **Focus:**  Test security-critical aspects of your application's code.
 * **Tools:** JUnit, Mockito, Spring Test
@@ -866,7 +866,7 @@ You're right to focus on security unit and integration tests and OWASP secure co
     ```
 
 
-#### Secure Coding Practices (OWASP)
+### 8.1.6 Secure Coding Practices (OWASP)
 
 * **Focus:** Follow OWASP guidelines to prevent common vulnerabilities.
 * **Resources:** OWASP Cheat Sheets, OWASP Top Ten
@@ -933,7 +933,7 @@ You're right to focus on security unit and integration tests and OWASP secure co
 - **Security Training:** Provide security training to your development team to raise awareness of common vulnerabilities and secure coding practices.
 
 
-#### Secrets Management
+### 8.1.7 Secrets Management
 
 Protecting sensitive information like keys and credentials is crucial for application's security. Here's how we proceed in the DAS evironment:
 
@@ -1019,7 +1019,7 @@ Then, you can set these environment variables on your server (e.g., in your depl
 * **Security:** Keys are stored securely, credentials are externalized, and APIs are protected.
 * **Flexibility:** Spring Cloud Config Server allows you to manage your configuration and secrets from a central location and easily update them without redeploying your applications.
 
-#### Container Image Security
+### 8.1.8 Container Image Security
 
 Container images are the building blocks of your application in a containerized environment. Ensuring their security is crucial to prevent vulnerabilities from making their way into your deployments.
 
@@ -1044,7 +1044,7 @@ Container images are the building blocks of your application in a containerized 
         * **Verify on Deployment:** Configure your container orchestration platform (Kubernetes, Docker Swarm) to verify image signatures before deploying containers.
 
 
-#### Infrastructure as Code (IaC) Security
+### 8.1.9 Infrastructure as Code (IaC) Security
 
 Infrastructure as Code (IaC) allows you to define and manage your infrastructure in a declarative way using code. However, IaC templates can also contain security misconfigurations.
 
@@ -1079,7 +1079,7 @@ Infrastructure as Code (IaC) allows you to define and manage your infrastructure
 * **Automation:** Automate image scanning and IaC scanning in your CI/CD pipeline to ensure consistent security checks.
 * **Security Policies:** Define clear security policies for your container images and infrastructure and enforce them using scanning tools and policy-as-code frameworks.
 
-#### Vulnerability Management
+### 8.1.10 Vulnerability Management
 
 Vulnerability management is an ongoing process of identifying, assessing, prioritizing, and remediating security vulnerabilities in your systems and applications. It's a continuous cycle that helps you proactively address security risks.
 
@@ -1117,7 +1117,7 @@ Vulnerability management is an ongoing process of identifying, assessing, priori
         * **Professional Services:**  Consider engaging professional penetration testing services for comprehensive assessments.
 
 
-#### Security Training and Awareness
+### 8.1.11 Security Training and Awareness
 
 Your development team plays a crucial role in building secure applications. Investing in security training and awareness is essential to create a security-conscious culture.
 
@@ -1147,13 +1147,11 @@ Your development team plays a crucial role in building secure applications. Inve
 * **Remediation:**  Develop a process for remediating vulnerabilities in a timely manner.
 * **Continuous Improvement:**  Regularly review and update your vulnerability management processes and security training programs.
 
-### Performance Optimization
-
-### 8.1 Performance Goals and Metrics
+### 8.2 Performance Optimization
 
 This application, being a mobile online banking solution operating in a high-latency environment, demands stringent performance standards to ensure a satisfactory user experience.  The following performance goals and metrics will guide the optimization efforts and measure the success of those efforts.
 
-#### 8.1.1 Performance Goals
+#### 8.2.1 Performance Goals
 
 * **Response Time:**
     * Balance inquiries:  Average response time under 1 second.
@@ -1172,7 +1170,7 @@ This application, being a mobile online banking solution operating in a high-lat
 * **Resource Utilization:**
     * Average CPU utilization on servers should remain below 70% under normal load.
 
-#### 8.1.2 Key Performance Metrics
+#### 8.2.2 Key Performance Metrics
 
 The following metrics will be used to track and assess the system's performance:
 
@@ -1183,7 +1181,7 @@ The following metrics will be used to track and assess the system's performance:
 * **Apdex Score:** A measure of user satisfaction based on response time thresholds.
 * **Resource Utilization:** CPU usage, memory usage, network bandwidth, and other relevant server resource metrics.
 
-#### 8.1.3 Measurement Tools
+#### 8.2.3 Measurement Tools
 
 The following tools will be employed to measure and monitor the defined performance metrics:
 
@@ -1202,11 +1200,11 @@ The following tools will be employed to measure and monitor the defined performa
 
 This approach ensures that performance optimization is treated as a first-class concern, with clear goals, metrics, and measurement strategies in place.
 
-### 8.2 Database Optimization
+### 8.3 Database Optimization
 
 Database performance is paramount in ensuring a responsive and scalable application. Several strategies are employed to optimize database interactions and minimize latency.
 
-#### 8.2.1 Minimizing Database Access
+#### 8.3.1 Minimizing Database Access
 
 The application is designed to reduce database access whenever possible. This is achieved through the following approaches:
 
@@ -1216,26 +1214,26 @@ The application is designed to reduce database access whenever possible. This is
 * **Credential-Based Access Control:** Access control is built on signed credentials, removing the requirement to look up access permissions in the database before serving a request.
 * **In-Memory Revocation:** Revocation lists are held in memory, enabling fast and efficient access control checks without database interaction.
 
-#### 8.2.2 Database Design and Partitioning
+#### 8.3.2 Database Design and Partitioning
 
 * **Optimized Schema:** The database schema is designed with performance in mind, using appropriate data types and indexing strategies for frequently queried columns.
 * **Horizontal Partitioning:** Externalized primary keys facilitate horizontal partitioning of the database. This enables distributing data across multiple database servers, significantly enhancing scalability and performance.
 
-#### 8.2.3 Query Optimization
+#### 8.3.3 Query Optimization
 
 Database queries are carefully analyzed and optimized to ensure minimal execution time. Query profilers are used to identify and optimize slow-performing queries.
 
-#### 8.2.4 Caching
+#### 8.3.4 Caching
 
 Caching strategies are implemented to further reduce the number of database queries. A distributed caching layer, such as Redis or Memcached, is employed to cache frequently accessed data and improve response times.
 
 These database optimization strategies contribute significantly to the application's overall performance, scalability, and responsiveness, particularly in a high-latency environment.
 
-### 8.3 Application Code Optimization
+### 8.4 Application Code Optimization
 
 Efficient application code is fundamental to achieving high performance. This section outlines the strategies employed to optimize the application's codebase and minimize resource consumption.
 
-#### 8.3.1 Efficient Algorithms and Data Structures
+#### 8.4.1 Efficient Algorithms and Data Structures
 
 The application leverages efficient algorithms and data structures to minimize computational complexity and ensure optimal performance.  This includes careful selection of data structures based on access patterns and the use of algorithms with low time and space complexity. For example:
 
@@ -1243,15 +1241,15 @@ The application leverages efficient algorithms and data structures to minimize c
 * **Optimized Collections:**  Appropriate Java Collections Framework classes (e.g., `ArrayList`, `LinkedList`, `HashSet`) are chosen based on the specific needs of each use case.
 * **Algorithm Selection:**  Algorithms are selected and implemented with consideration for their time and space complexity, ensuring efficient processing of data.
 
-#### 8.3.2 Code Profiling and Bottleneck Identification
+#### 8.4.2 Code Profiling and Bottleneck Identification
 
 Code profiling is an integral part of the development process. Profiling tools, such as Java VisualVM, JProfiler, or YourKit, are used to analyze CPU usage, memory allocation, and method call times. This helps identify performance bottlenecks and optimize critical code sections.
 
-#### 8.3.3 Asynchronous Processing
+#### 8.4.3 Asynchronous Processing
 
 Asynchronous processing is employed for non-critical tasks to avoid blocking the main thread and improve responsiveness. Spring's `@Async` annotation and Java's `CompletableFuture` are used to implement asynchronous operations, allowing the application to handle concurrent requests efficiently.
 
-#### 8.3.4  Spring Boot Optimization Features
+#### 8.4.4  Spring Boot Optimization Features
 
 The application leverages Spring Boot's built-in optimization features, such as:
 
@@ -1261,15 +1259,11 @@ The application leverages Spring Boot's built-in optimization features, such as:
 
 These application code optimization techniques contribute significantly to the overall performance and responsiveness of the system.
 
-You're absolutely correct! CBOR is indeed a more suitable choice than BSON for size efficiency in your scenario. My apologies for the mixup.
-
-Here's the corrected version of section 8.4, with the CBOR migration plan:
-
-### 8.4 Network Optimization
+### 8.5 Network Optimization
 
 Efficient network communication is essential for optimal performance, especially in a microservices architecture and a high-latency environment. This section details the strategies employed to optimize network interactions.
 
-#### 8.4.1 Minimizing Network Latency
+#### 8.5.1 Minimizing Network Latency
 
 Network latency is a key performance factor, particularly given the high-latency environment in which the application operates. To mitigate this, the following approaches are used:
 
@@ -1277,24 +1271,24 @@ Network latency is a key performance factor, particularly given the high-latency
 * **Efficient Routing:** Network routing is optimized to ensure efficient communication paths between services.
 * **Connection Pooling:** Connection pooling is utilized to minimize the overhead of establishing new network connections for each request.
 
-#### 8.4.2 Communication Protocol Selection
+#### 8.5.2 Communication Protocol Selection
 
 While JSON is the initial choice for inter-service communication due to its ease of use and readability, it is acknowledged that JSON may not be the most efficient protocol in terms of size.
 
 * **JSON:**  JSON is used initially for its human-readability and ease of implementation.
 * **CBOR Migration:** The system will migrate to CBOR (Concise Binary Object Representation) in the future to leverage its size efficiency and improve network performance. CBOR's binary encoding offers a more compact representation of data compared to JSON, resulting in faster transmission and reduced bandwidth consumption.
 
-#### 8.4.3 Content Delivery Network (CDN)
+#### 8.5.3 Content Delivery Network (CDN)
 
 Static content, such as images or JavaScript files, will be served through a Content Delivery Network (CDN). This distributes content closer to users, reducing latency and improving loading times.
 
 These network optimization strategies, combined with the planned migration to CBOR, aim to create a responsive and efficient application even in challenging network conditions. By continuously evaluating and improving network communication, the system ensures smooth interactions between microservices and a seamless user experience.
 
-### 8.5 Caching Strategies
+### 8.6 Caching Strategies
 
 Caching is a critical performance optimization technique, especially in applications that involve frequent data retrieval. This section describes the caching strategies employed to reduce latency and improve response times.
 
-#### 8.5.1 Caching Layers
+#### 8.6.1 Caching Layers
 
 Caching is implemented at various layers of the application to maximize its effectiveness:
 
@@ -1309,7 +1303,7 @@ Caching is implemented at various layers of the application to maximize its effe
 * **Distributed Caching:** A distributed cache, such as Redis or Memcached, is used to share cached data across multiple servers. This improves performance and scalability, especially in a clustered environment.
     * **Data Consistency:** Implement mechanisms to ensure data consistency across the distributed cache.
 
-#### 8.5.2 Cache Invalidation
+#### 8.6.2 Cache Invalidation
 
 Appropriate cache invalidation strategies are crucial to maintain data consistency between the cache and the primary data source (database).
 
@@ -1317,7 +1311,7 @@ Appropriate cache invalidation strategies are crucial to maintain data consisten
 * **Event-Driven Invalidation:** Cache entries are invalidated when relevant events occur (e.g., data updates, account changes).
 * **Manual Invalidation:**  Provide mechanisms to manually invalidate cache entries when necessary.
 
-#### 8.5.3 Caching Considerations
+#### 8.6.3 Caching Considerations
 
 * **Data Freshness:** Balance the need for data freshness with the performance benefits of caching.
 * **Cache Size:**  Configure appropriate cache sizes to avoid excessive memory consumption.
@@ -1325,18 +1319,18 @@ Appropriate cache invalidation strategies are crucial to maintain data consisten
 
 By implementing these caching strategies, the application aims to significantly reduce data retrieval times, improve responsiveness, and enhance the overall user experience.
 
-### 8.6 Load Testing and Performance Tuning
+### 8.7 Load Testing and Performance Tuning
 
 Load testing and performance tuning are essential practices to ensure the application can handle expected user traffic and maintain optimal performance under stress. This section outlines the approach to load testing and performance tuning.
 
-#### 8.6.1 Load Testing
+#### 8.7.1 Load Testing
 
 * **Realistic Simulation:** Load testing simulates real-world usage patterns by generating user traffic that mimics expected user behavior. This includes simulating various actions like user logins, balance inquiries, transaction history retrieval, and profile updates.
 * **Tools:** Load testing tools such as JMeter, LoadRunner, or Gatling are used to generate realistic user loads and measure system performance under stress.
 * **Metrics:** During load testing, key metrics are collected, including response times, latency, throughput, error rates, and resource utilization.
 * **Bottleneck Identification:** Load testing helps identify performance bottlenecks in the application, database, or infrastructure. These bottlenecks can include slow database queries, inefficient code, or network limitations.
 
-#### 8.6.2 Performance Tuning
+#### 8.7.2 Performance Tuning
 
 * **Data-Driven Optimization:** Performance tuning is an iterative process based on the data gathered during load testing. Bottlenecks and areas for improvement are identified and addressed.
 * **Application Code:**  Application code is analyzed and optimized to improve efficiency. This can involve refining algorithms, optimizing data structures, and minimizing resource consumption.
@@ -1346,11 +1340,11 @@ Load testing and performance tuning are essential practices to ensure the applic
 
 This iterative process of load testing and performance tuning ensures that the application remains performant and scalable as user traffic grows. By continuously monitoring and optimizing the system, a high-quality user experience can be maintained even under peak load conditions.
 
-### 8.7 Monitoring and Alerting
+### 8.8 Monitoring and Alerting
 
 Continuous monitoring and alerting are vital for maintaining application performance and proactively addressing potential issues. This section outlines the strategies employed for performance monitoring and alerting.
 
-#### 8.7.1 Performance Monitoring
+#### 8.8.1 Performance Monitoring
 
 * **Application Performance Monitoring (APM) Tools:** APM tools, such as New Relic, Datadog, Dynatrace, or Prometheus with Grafana, are used to continuously monitor the application's performance. These tools provide insights into various metrics, including:
     * Response times
@@ -1360,7 +1354,7 @@ Continuous monitoring and alerting are vital for maintaining application perform
     * Database performance
 * **Custom Dashboards:**  Custom dashboards are created within the APM tools to visualize key performance indicators (KPIs) and track trends over time.
 
-#### 8.7.2 Alerting
+#### 8.8.2 Alerting
 
 * **Threshold-Based Alerts:** Alerts are configured to trigger notifications when critical metrics exceed predefined thresholds. For example, alerts can be set for:
     * High error rates
@@ -1374,29 +1368,29 @@ Continuous monitoring and alerting are vital for maintaining application perform
 This proactive approach to monitoring and alerting enables the operations team to identify and address performance issues before they significantly impact users. By continuously tracking key metrics and receiving timely notifications, the team can ensure the application remains performant and reliable.
 
 
-### 9. Error Handling
+### 8.9 Error Handling
 
 Robust error handling is essential to ensure the application's reliability and provide a positive user experience. This section describes the error handling mechanisms implemented throughout the system.
 
-#### 9.1 Error Logging
+#### 8.9.1 Error Logging
 
 * **Comprehensive Logging:**  All errors, exceptions, and warnings are logged with detailed contextual information. This includes timestamps, user IDs (if applicable), request details, and relevant stack traces.
 * **Log Levels:** Log messages are categorized by severity levels (e.g., DEBUG, INFO, WARN, ERROR) to facilitate filtering and analysis.
 * **Centralized Logging:** A centralized logging system is used to aggregate logs from all microservices and infrastructure components. This provides a unified view of system activity and facilitates troubleshooting.
 
-#### 9.2 Error Monitoring and Alerting
+#### 8.9.2 Error Monitoring and Alerting
 
 * **Real-time Monitoring:**  Error logs are monitored in real-time to detect critical issues and trigger immediate responses.
 * **Alerting:**  Alerts are generated for critical errors, such as service outages, database connection failures, or security breaches.
 * **Notification Channels:** Alerts are delivered through various channels, including email, Slack, and PagerDuty, to ensure prompt attention from the operations team.
 
-#### 9.3 Error Handling in API Responses
+#### 8.9.3 Error Handling in API Responses
 
 * **User-Friendly Messages:** Error responses in APIs are designed to provide informative and user-friendly error messages. These messages avoid technical jargon and guide users towards resolving the issue.
 * **Error Codes:**  API responses include error codes that provide more specific information about the nature of the error.
 * **Internationalization:** Error messages are internationalized to support different languages and locales.
 
-#### 9.4 Error Recovery
+#### 8.9.4 Error Recovery
 
 * **Graceful Degradation:** The application is designed to degrade gracefully in the event of errors. Non-critical services may be temporarily unavailable, but core functionality should remain operational.
 * **Retry Mechanisms:**  Retry mechanisms are implemented for transient errors, such as temporary network issues or service unavailability.
@@ -1431,4 +1425,4 @@ DAS is developed with Java, Spring Boot, ReactJS, TypeScript, TailwindCSS, AWS, 
 ## 13. Glossary
 - **DAS**: Deposit Account Service
 - **OBS**: Online Banking Service
-- **AAS**: Account Access Service
+- **PRS**: Person Registration Service
