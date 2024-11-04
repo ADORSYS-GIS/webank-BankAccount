@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "EmptyLedgersApplication",
+            "request": "launch",
+            "mainClass": "de.adorsys.ledgers.bank.test.empty.EmptyLedgersApplication",
+            "projectName": "ledgers-bank-account-rest-server",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "h2"
+            }            
+        },
+        {
+            "type": "java",
+            "name": "LoadedLedgersApplication",
+            "request": "launch",
+            "mainClass": "de.adorsys.ledgers.bank.test.loaded.LoadedLedgersApplication",
+            "projectName": "ledgers-bank-account-rest-server",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "h2"
+            }
+        }
+    ]
+}
