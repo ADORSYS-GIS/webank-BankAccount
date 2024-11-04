@@ -31,6 +31,7 @@
       <module name="ledgers-bank-account-rest-server" options="-parameters" />
       <module name="ledgers-bank-account-service-api" options="-parameters" />
       <module name="ledgers-bank-account-service-impl" options="-parameters" />
+      <module name="webbank-BankAccount" options="-parameters" />
     </option>
   </component>
 </project>
