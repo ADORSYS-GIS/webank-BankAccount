@@ -177,13 +177,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/ADORSYS-GIS/ledgers</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -742,12 +735,12 @@
             </build>
             <distributionManagement>
                 <repository>
-                    <id>gitlab-maven</id>
-                    <url>https://git.adorsys.de/api/v4/projects/1500/packages/maven</url>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/ADORSYS-GIS/webbank-BankAccount</url>
                 </repository>
                 <snapshotRepository>
-                    <id>gitlab-maven</id>
-                    <url>https://git.adorsys.de/api/v4/projects/1500/packages/maven</url>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/ADORSYS-GIS/webbank-BankAccount</url>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
