@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-
+      
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +23,9 @@ jobs:
         distribution: 'temurin'
     - name: Cache Maven packages
       uses: actions/cache@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USERNAME: ${{ secrets.REPOSITORY_OWNER }}
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
