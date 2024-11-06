@@ -25,7 +25,6 @@ jobs:
       uses: actions/cache@v2
       env:
         GITHUB_TOKEN: ${{ secrets.LEDGER_READ_SECRET }}
-        GITHUB_USERNAME: ${{ secrets.REPOSITORY_OWNER }}
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
