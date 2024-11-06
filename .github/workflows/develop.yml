@@ -24,7 +24,7 @@ jobs:
     - name: Cache Maven packages
       uses: actions/cache@v2
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.LEDGER_READ_SECRET }}
         GITHUB_USERNAME: ${{ secrets.REPOSITORY_OWNER }}
       with:
         path: ~/.m2
