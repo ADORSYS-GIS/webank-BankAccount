@@ -13,9 +13,10 @@ pom.xml.versionsBackup
 .sts4-cache
 
 ### IntelliJ IDEA ###
-!.idea
 .idea/*
-!.idea/copyright/
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/jarRepositories.xml
 
 *.iws
 *.iml
