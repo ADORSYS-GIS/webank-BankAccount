@@ -47,7 +47,7 @@ jobs:
       run: mvn clean install -s ~/.m2/settings.xml -DskipTests -DskipITs -Dmaven.javadoc.skip=true
       
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    
+
     # - name: Update dependency graph
     #   uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
@@ -129,6 +129,20 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+          
+      - name: Set up Maven settings.xml
+        run: |
+         mkdir -p ~/.m2
+         echo "<settings>
+                <servers>
+                  <server>
+                    <id>github-ledgers</id>
+                    <username>${{ github.actor }}</username>
+                    <password>${{ secrets.LEDGER_READ_SECRET }}</password>
+                  </server>
+                </servers>
+              </settings>" > ~/.m2/settings.xml
+          
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
