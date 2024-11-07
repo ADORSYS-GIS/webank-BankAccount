@@ -10,8 +10,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>de.adorsys.ledgers</groupId>
-		<artifactId>webbank-BankAccount</artifactId>
+		<groupId>de.adorsys.webank</groupId>
+		<artifactId>webank-BankAccount</artifactId>
 		<version>0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
 	</parent>

@@ -14,8 +14,8 @@
             "type": "java",
             "name": "EmptyLedgersApplication",
             "request": "launch",
-            "mainClass": "de.adorsys.ledgers.bank.test.empty.EmptyLedgersApplication",
-            "projectName": "ledgers-bank-account-rest-server",
+            "mainClass": "de.adorsys.webank.bank.test.empty.EmptyLedgersApplication",
+            "projectName": "webank-bank-account-rest-server",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "h2"
             }            
@@ -24,8 +24,8 @@
             "type": "java",
             "name": "LoadedLedgersApplication",
             "request": "launch",
-            "mainClass": "de.adorsys.ledgers.bank.test.loaded.LoadedLedgersApplication",
-            "projectName": "ledgers-bank-account-rest-server",
+            "mainClass": "de.adorsys.webank.bank.test.loaded.LoadedLedgersApplication",
+            "projectName": "webank-bank-account-rest-server",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "h2"
             }
