@@ -43,7 +43,7 @@ jobs:
                 </servers>
               </settings>" > ~/.m2/settings.xml
 
-    - name: Build with Webbank BankAcount
+    - name: Build with webank BankAcount
       run: mvn clean install -s ~/.m2/settings.xml -DskipTests -DskipITs -Dmaven.javadoc.skip=true
       
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
@@ -55,7 +55,7 @@ jobs:
     name: Generate Javadocs
     runs-on: ubuntu-latest
     steps:
-      - name: Clone Webbank-BankAccount repository
+      - name: Clone webank-BankAccount repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17 for x64
@@ -83,7 +83,7 @@ jobs:
     name: Run UI tests
     runs-on: ubuntu-latest
     steps:
-      - name: Clone Webbank BankAccount main repository
+      - name: Clone webank BankAccount main repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17 for x64

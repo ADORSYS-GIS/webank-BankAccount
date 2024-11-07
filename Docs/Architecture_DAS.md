@@ -103,13 +103,13 @@ The DAS module is composed of three main components:
 
 In terms of Java modules, DAS contains the following artifacts.
 
-**ledgers-bank-account**
-*   **ledgers-bank-account-repository:** Handles data persistence for bank accounts, likely interacting with a database.
-*   **ledgers-bank-account-service-api:** Defines the interfaces and contracts for bank account services, outlining the operations that can be performed. An embedding module accesses DAS through these interfaces.
-*   **ledgers-bank-account-service-impl:** Provides the concrete implementation of the bank account services, carrying out the actual business logic and access control logic.
-*   **ledgers-bank-account-rest-api:**  Specifies the RESTful API endpoints for interacting with bank accounts, defining the resources and operations available to external systems. A remote module accesses DAS through endpoints defined in this module.
-*   **ledgers-bank-account-rest-server:** Implements the REST API, handling HTTP requests and responses related to bank accounts.
-*   **ledgers-bank-account-rest-client:** Offers a client library for consuming the bank account REST API, facilitating integration with other services.
+**webank-bank-account**
+*   **webank-bank-account-repository:** Handles data persistence for bank accounts, likely interacting with a database.
+*   **webank-bank-account-service-api:** Defines the interfaces and contracts for bank account services, outlining the operations that can be performed. An embedding module accesses DAS through these interfaces.
+*   **webank-bank-account-service-impl:** Provides the concrete implementation of the bank account services, carrying out the actual business logic and access control logic.
+*   **webank-bank-account-rest-api:**  Specifies the RESTful API endpoints for interacting with bank accounts, defining the resources and operations available to external systems. A remote module accesses DAS through endpoints defined in this module.
+*   **webank-bank-account-rest-server:** Implements the REST API, handling HTTP requests and responses related to bank accounts.
+*   **webank-bank-account-rest-client:** Offers a client library for consuming the bank account REST API, facilitating integration with other services.
 
 **webank-utils**
 This module contains utility functions and helper classes that are shared across different parts of the banking application. It's divided into:
@@ -122,15 +122,15 @@ The following diagram contains the dependency tree as defined by the current sta
 
 ```mermaid
 graph TD
-    webbank-BankAccount --> A(ledgers-bank-account) 
-        A --> B(ledgers-bank-account-repository)
-        A --> C(ledgers-bank-account-service-api)
-        A --> D(ledgers-bank-account-service-impl)
-        A --> E(ledgers-bank-account-rest-api)
-        A --> F(ledgers-bank-account-rest-server)
-        A --> G(ledgers-bank-account-rest-client)
+    webank-BankAccount --> A(webank-bank-account) 
+        A --> B(webank-bank-account-repository)
+        A --> C(webank-bank-account-service-api)
+        A --> D(webank-bank-account-service-impl)
+        A --> E(webank-bank-account-rest-api)
+        A --> F(webank-bank-account-rest-server)
+        A --> G(webank-bank-account-rest-client)
 
-    webbank-BankAccount --> H(webank-utils) 
+    webank-BankAccount --> H(webank-utils) 
         H --> I(webank-api-utils)
         H --> J(webank-server-utils)
 ```
@@ -620,7 +620,7 @@ graph LR
 
 Security in the DAS application is paramount and is built upon the following core principles:
 
-*   **Decentralized and Declarative Access Control:** Access control is enforced directly within the service layer (e.g., `ledgers-account-service-impl`) and is entirely declarative. This means that access permissions are defined by associating accessor public keys with the resources they are allowed to access in a dedicated access control database. The presented credential serves as an attestation of this right, eliminating the need for real-time checks against the access database during authorization.
+*   **Decentralized and Declarative Access Control:** Access control is enforced directly within the service layer (e.g., `webank-account-service-impl`) and is entirely declarative. This means that access permissions are defined by associating accessor public keys with the resources they are allowed to access in a dedicated access control database. The presented credential serves as an attestation of this right, eliminating the need for real-time checks against the access database during authorization.
 
 *   **Public Key-Based Authentication:**  DAS handles user authentication directly, relying on public key cryptography.  Accounts are linked to accessor public keys. Access is granted based on:
     *   **Signed Credentials (SD-JWT):** Issued by DAS to authenticated users, these credentials assert the user's identity and their associated public key.
