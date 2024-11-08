@@ -149,4 +149,19 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=webank -Dsonar.projectName='webank'
 
+
+ # Check the SonarQube Quality Gate status
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+
+# Display Quality Gate status result in the console
+      - name: Show SonarQube Quality Gate Status
+        run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
+
+
   
