@@ -150,6 +150,7 @@ jobs:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=webank -Dsonar.projectName='webank'
 
 
+        
  # Check the SonarQube Quality Gate status
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
