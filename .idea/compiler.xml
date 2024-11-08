@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for WeBeank - BankAccount" enabled="true">
+      <profile name="Annotation profile for webank - BankAccount" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -12,19 +12,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
-        <module name="ledgers-bank-account-rest-server" />
-        <module name="ledgers-bank-account-repository" />
-        <module name="ledgers-bank-account-rest-api" />
+        <module name="webank-bank-account-service-api" />
+        <module name="webank-bank-account-rest-server" />
+        <module name="webank-bank-account-repository" />
         <module name="webank-api-utils" />
-        <module name="ledgers-bank-account-rest-client" />
         <module name="webank-server-utils" />
-        <module name="ledgers-bank-account-service-api" />
-        <module name="ledgers-bank-account-service-impl" />
+        <module name="webank-bank-account-rest-api" />
+        <module name="webank-bank-account-rest-client" />
+        <module name="webank-bank-account-service-impl" />
       </profile>
     </annotationProcessing>
   </component>
@@ -39,6 +35,13 @@
       <module name="ledgers-bank-account-service-api" options="-parameters" />
       <module name="ledgers-bank-account-service-impl" options="-parameters" />
       <module name="webank-api-utils" options="-parameters" />
+      <module name="webank-bank-account" options="-parameters" />
+      <module name="webank-bank-account-repository" options="-parameters" />
+      <module name="webank-bank-account-rest-api" options="-parameters" />
+      <module name="webank-bank-account-rest-client" options="-parameters" />
+      <module name="webank-bank-account-rest-server" options="-parameters" />
+      <module name="webank-bank-account-service-api" options="-parameters" />
+      <module name="webank-bank-account-service-impl" options="-parameters" />
       <module name="webank-server-utils" options="-parameters" />
       <module name="webank-utils" options="-parameters" />
       <module name="webbank-BankAccount" options="-parameters" />
