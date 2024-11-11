@@ -23,4 +23,20 @@
     </modules>
 
 	<packaging>pom</packaging>
+
+	<scm>
+		<connection>scm:git:https://github.com/ADORSYS-GIS/webank-BankAccount</connection>
+		<developerConnection>scm:git:https://github.com/ADORSYS-GIS/webank-BankAccount</developerConnection>
+		<url>https://github.com/ADORSYS-GIS/webank-BankAccount</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/ADORSYS-GIS/webank-BankAccount</url>
+		</repository>
+	</distributionManagement>
+
 </project>
