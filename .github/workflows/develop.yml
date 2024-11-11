@@ -46,7 +46,6 @@ jobs:
     - name: Build with webank BankAcount
       run: mvn clean install -s ~/.m2/settings.xml -DskipTests -DskipITs -Dmaven.javadoc.skip=true
       
-    
 
   javaDoc:
     needs: build
