@@ -577,15 +577,15 @@
             </plugin>
         </plugins>
     </build>
-
-    <scm>
-        <connection>scm:git@git.adorsys.de:adorsys/xs2a/ledgers.git</connection>
-        <developerConnection>scm:git:git@git.adorsys.de:adorsys/xs2a/ledgers.git</developerConnection>
-        <url>git@git.adorsys.de:adorsys/xs2a/ledgers.git</url>
-        <tag>HEAD</tag>
-    </scm>
-
     
+    <scm>
+		<connection>scm:git:https://github.com/ADORSYS-GIS/webank-BankAccount</connection>
+		<developerConnection>scm:git:https://github.com/ADORSYS-GIS/webank-BankAccount</developerConnection>
+		<url>https://github.com/ADORSYS-GIS/webank-BankAccount</url>
+		<tag>HEAD</tag>
+	</scm>
+
+
     <profiles>
         <profile>
             <id>release</id>
