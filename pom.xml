@@ -129,6 +129,26 @@
         <lombok.version>1.18.30</lombok.version>
         <jasypt.version>1.9.3</jasypt.version>
 
+         <!--Sonar -->
+        <sonar.core.coveragePlugin>jacoco</sonar.core.coveragePlugin>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.language>java</sonar.language>
+
+        <sonar.coverage.exclusions>  
+            **/*.xml,
+            **/webank-bank-account-service-api/**/*,
+            **/webank-bank-account-rest-api/**/*,
+            **/webank-bank-account-rest-server/**/*,
+            **/webank-bank-account-repository/**/*,
+            **/webank-bank-account-rest-client/**/*,
+            **/webank-api-utils/**/*,
+            **/webank-server-utils/**/*
+            **/*Properties*.java
+        </sonar.coverage.exclusions>
+        
+        <skipITs>false</skipITs>
+
     </properties>
 
     <repositories>
@@ -544,6 +564,11 @@
                          <goals>
                             <goal>report</goal>
                          </goals>
+                         <configuration>
+                            <formats>
+                                <format>XML</format>
+                            </formats>
+                         </configuration>
                       </execution>
                    </executions>
                 </plugin>
