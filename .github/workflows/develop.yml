@@ -169,44 +169,44 @@ jobs:
 
 # Automatically Deploy artifacts to github packages
 
-  publish:
-    name: Deploy Artifacts
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+  # publish:
+  #   name: Deploy Artifacts
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         java-version: '17'
+  #         distribution: 'temurin'
 
 
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-            path: ~/.m2
-            key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-            restore-keys: ${{ runner.os }}-m2
+  #     - name: Cache Maven packages
+  #       uses: actions/cache@v4
+  #       with:
+  #           path: ~/.m2
+  #           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+  #           restore-keys: ${{ runner.os }}-m2
 
            
-      - name: Set up Maven settings.xml
-        run: |
-           mkdir -p ~/.m2
-           echo "<settings>
-                  <servers>
-                    <server>
-                      <id>github-ledgers</id>
-                      <username>${{ github.actor }}</username>
-                      <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
-                    </server>
-                  </servers>
-                </settings>" > ~/.m2/settings.xml    
+  #     - name: Set up Maven settings.xml
+  #       run: |
+  #          mkdir -p ~/.m2
+  #          echo "<settings>
+  #                 <servers>
+  #                   <server>
+  #                     <id>github-ledgers</id>
+  #                     <username>${{ github.actor }}</username>
+  #                     <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+  #                   </server>
+  #                 </servers>
+  #               </settings>" > ~/.m2/settings.xml    
                 
-      - name: Publish package
-        run: mvn -ntp -Pgitlab-maven -DskipTests -U deploy                                                                  
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Publish package
+  #       run: mvn -ntp -Pgitlab-maven -DskipTests -U deploy                                                                  
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   
