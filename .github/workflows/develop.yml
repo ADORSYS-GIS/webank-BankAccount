@@ -206,7 +206,7 @@ jobs:
                 
       - name: Publish package
         run: mvn -ntp -Pgitlab-maven -DskipTests -U deploy                                                                  
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   
