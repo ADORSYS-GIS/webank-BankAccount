@@ -129,43 +129,26 @@
         <lombok.version>1.18.30</lombok.version>
         <jasypt.version>1.9.3</jasypt.version>
 
-        <!--Sonar -->
+         <!--Sonar -->
         <sonar.core.coveragePlugin>jacoco</sonar.core.coveragePlugin>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.language>java</sonar.language>
-        <sonar.coverage.exclusions>
-            **/*Entity.java,**/*TO.java,
-            **/*BO.java,**/*PO.java,
-            **/*Application.java,
-            **/*Exception.java,
-            **/*Config*.java,
+
+        <sonar.coverage.exclusions>  
             **/*.xml,
-            **/ledgers-user-management-service-api/**/*,
-            **/ledgers-sca-service-api/**/*,
-            **/ledgers-postings-service-api/**/*,
-            **/ledgers-middleware-service-api/**/*,
-            **/ledgers-deposit-account-service-api/**/*,
-            **/ledgers-jaxb-api/**/*,
-            **/ledgers-middleware-rest-api/**/*,
-            **/ledgers-security/**/*,
-            **/ledgers-app/**/*,
-            **/ledgers-middleware-rest-server/**/*,
-            **/ledgers-deposit-account-repository/**/*,
-            **/ledgers-postings-repository/**/*,
-            **/ledgers-sca-repository/**/*,
-            **/ledgers-user-management-repository/**/*,
-            **/ledgers-utils/**/*,
-            **/*Provider*.java,
-            **/*Test*.java,
-            **/api/**/*,
-            **/keycloak/client/model/**/*,
+            **/webank-bank-account-service-api/**/*,
+            **/webank-bank-account-rest-api/**/*,
+            **/webank-bank-account-rest-server/**/*,
+            **/webank-bank-account-repository/**/*,
+            **/webank-bank-account-rest-client/**/*,
+            **/webank-api-utils/**/*,
+            **/webank-server-utils/**/*
             **/*Properties*.java
         </sonar.coverage.exclusions>
-        <sonar.moduleName>${project.artifactId}</sonar.moduleName>
-
+        
         <skipITs>false</skipITs>
+
     </properties>
 
     <repositories>
@@ -563,35 +546,33 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
-                <configuration>
-                    <destFile>${sonar.jacoco.reportPath}</destFile>
-                    <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                    <append>true</append>
-                    <excludes>
-                        <exclude>**/generated-sources/**</exclude>
-                    </excludes>
-
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
+          
+    
+                <plugin>
+                   <groupId>org.jacoco</groupId>
+                   <artifactId>jacoco-maven-plugin</artifactId>
+                   <version>${jacoco-maven-plugin.version}</version>
+                   <executions>
+                      <execution>
+                         <id>prepare-agent</id>
+                         <goals>
                             <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
-                        <goals>
+                         </goals>
+                      </execution>
+                      <execution>
+                         <id>report</id>
+                         <goals>
                             <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+                         </goals>
+                         <configuration>
+                            <formats>
+                                <format>XML</format>
+                            </formats>
+                         </configuration>
+                      </execution>
+                   </executions>
+                </plugin>
+             
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -621,13 +602,14 @@
             </plugin>
         </plugins>
     </build>
-
+    
     <scm>
 		<connection>scm:git:https://github.com/ADORSYS-GIS/webank-BankAccount</connection>
 		<developerConnection>scm:git:https://github.com/ADORSYS-GIS/webank-BankAccount</developerConnection>
 		<url>https://github.com/ADORSYS-GIS/webank-BankAccount</url>
 		<tag>HEAD</tag>
 	</scm>
+
 
     <profiles>
         <profile>

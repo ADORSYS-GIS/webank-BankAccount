@@ -17,6 +17,7 @@
 	</parent>
 	<artifactId>webank-utils</artifactId>
 
+	
 	<modules>
 		<module>webank-api-utils</module>
 		<module>webank-server-utils</module>
