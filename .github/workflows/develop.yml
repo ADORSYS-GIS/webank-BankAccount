@@ -182,7 +182,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Publish package
-        run: mvn deploy
+        run: mvn -ntp -Pgitlab-maven -DskipTests -U deploy                                                                  
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
