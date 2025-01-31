@@ -52,12 +52,15 @@ class BankAccountCertificateCreationServiceImplTest {
     void testRegisterNewBankAccount_Failure() {
         when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(null);
 
-        assertThrows(IllegalStateException.class, () -> {  // Fixed typo in exception name
-            BankAccountBO account = new BankAccountBO();  // Separate object creation
-            certificateCreationService.registerNewBankAccount(  // Single throwing invocation
-                    "123", "key", account, "user", "branch"  // Use correct BankAccountBO class
-            );
-        });
+        // Create object OUTSIDE the lambda
+        BankAccountBO account = new BankAccountBO(); // Fix class name typo (B0 -> BO)
+
+        assertThrows(IllegalStateException.class, () ->
+                // Only the service call remains in the lambda
+                certificateCreationService.registerNewBankAccount(
+                        "123", "key", account, "user", "branch"
+                )
+        );
     }
 
     @Test
