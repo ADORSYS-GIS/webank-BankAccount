@@ -10,7 +10,6 @@ import de.adorsys.webank.bank.api.service.util.BankAccountCertificateCreationSer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -45,12 +44,12 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     public String generateBankAccountCertificate(String phoneNumber, String devicePublicKey, String accountId) {
         try {
             //@Value("${server.private.key}")
-            String SERVER_PRIVATE_KEY_JSON = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"d\": \"E-_KxQl0ow6_4Munq81OH_lg64R2vDpe3zq9XnI0AjE\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
+            String serverPrivateKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"d\": \"E-_KxQl0ow6_4Munq81OH_lg64R2vDpe3zq9XnI0AjE\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
             //@Value("${server.public.key}")
-            String SERVER_PUBLIC_KEY_JSON = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
+            String serverPublicKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
 
             // Parse the server's private key from the JWK JSON string
-            ECKey serverPrivateKey = (ECKey) JWK.parse(SERVER_PRIVATE_KEY_JSON);
+            ECKey serverPrivateKey = (ECKey) JWK.parse(serverPrivateKeyJson);
 
             // Check that the private key contains the 'd' (private) parameter for signing
             if (serverPrivateKey.getD() == null) {
@@ -77,7 +76,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             Payload payload = new Payload(payloadData);
 
             // Parse the server's public key from the JWK JSON string
-            ECKey serverPublicKey = (ECKey) JWK.parse(SERVER_PUBLIC_KEY_JSON);
+            ECKey serverPublicKey = (ECKey) JWK.parse(serverPublicKeyJson);
 
             // Create the JWT header with the JWK object (the server public key)
             JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256)
