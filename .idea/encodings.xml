@@ -17,6 +17,12 @@
     <file url="file://$PROJECT_DIR$/ledgers-bank-account/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webank-bank-account/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webank-bank-account/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webank-bank-account/webank-bank-account-rest-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webank-bank-account/webank-bank-account-rest-server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webank-bank-account/webank-bank-account-service-impl/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webank-bank-account/webank-bank-account-service-impl/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/webank-utils/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/webank-utils/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/webank-utils/webank-api-utils/src/main/java" charset="UTF-8" />
