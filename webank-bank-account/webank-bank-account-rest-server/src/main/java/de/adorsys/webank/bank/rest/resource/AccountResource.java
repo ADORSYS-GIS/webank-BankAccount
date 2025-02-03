@@ -48,8 +48,7 @@ public class AccountResource implements AccountRestAPI {
     @Override
     public ResponseEntity<List<TransactionTO>> getTransactionByDates(String accountId, LocalDateTime dateFrom, LocalDateTime dateTo) {
         dateChecker(dateFrom, dateTo);
-//        List<TransactionTO> transactions = bankAccountService.getTransactionsByDates(accountId, validDate(dateFrom), validDate(dateTo));
-//        return ResponseEntity.ok(transactions);
+
         return null;
     }
 
