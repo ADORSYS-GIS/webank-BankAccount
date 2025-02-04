@@ -10,7 +10,7 @@ import de.adorsys.ledgers.postings.api.domain.LedgerAccountBO;
 import de.adorsys.ledgers.postings.api.domain.LedgerBO;
 import de.adorsys.ledgers.postings.api.service.LedgerService;
 import lombok.RequiredArgsConstructor;
-
+@SuppressWarnings("PMD")
 @RequiredArgsConstructor
 public abstract class AbstractServiceImpl {
     protected final BankAccountConfigService bankAccountConfigService;

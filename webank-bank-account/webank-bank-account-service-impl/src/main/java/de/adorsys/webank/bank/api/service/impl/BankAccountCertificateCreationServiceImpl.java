@@ -46,7 +46,6 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             //@Value("${server.private.key}")
             String serverPrivateKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"d\": \"E-_KxQl0ow6_4Munq81OH_lg64R2vDpe3zq9XnI0AjE\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
             //@Value("${server.public.key}")
-            String serverPublicKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
 
             // Parse the server's private key from the JWK JSON string
             ECKey serverPrivateKey = (ECKey) JWK.parse(serverPrivateKeyJson);
@@ -74,6 +73,9 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             // Create JWT payload including phoneHash, devicePubKeyHash, and accountIdHash
             String payloadData = String.format("{\"phoneHash\": \"%s\", \"devicePubKeyHash\": \"%s\", \"accountIdHash\": \"%s\"}", phoneHash, devicePubKeyHash, accountIdHash);
             Payload payload = new Payload(payloadData);
+
+
+            String serverPublicKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
 
             // Parse the server's public key from the JWK JSON string
             ECKey serverPublicKey = (ECKey) JWK.parse(serverPublicKeyJson);

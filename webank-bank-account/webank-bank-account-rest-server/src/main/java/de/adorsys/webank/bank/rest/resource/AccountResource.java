@@ -47,9 +47,8 @@ public class AccountResource implements AccountRestAPI {
 
     @Override
     public ResponseEntity<List<TransactionTO>> getTransactionByDates(String accountId, LocalDateTime dateFrom, LocalDateTime dateTo) {
-//        dateChecker(dateFrom, dateTo);
-//        List<TransactionTO> transactions = bankAccountService.getTransactionsByDates(accountId, validDate(dateFrom), validDate(dateTo));
-//        return ResponseEntity.ok(transactions);
+        dateChecker(dateFrom, dateTo);
+
         return null;
     }
 
@@ -71,6 +70,7 @@ public class AccountResource implements AccountRestAPI {
     private void dateChecker(LocalDateTime dateFrom, LocalDateTime dateTo) {
         if (!validDate(dateFrom).isEqual(validDate(dateTo))
                 && validDate(dateFrom).isAfter(validDate(dateTo))) {
+            throw new IllegalArgumentException("Invalid date range: 'date from' cannot be after 'date to'");
 //            throw MiddlewareModuleException.builder()
 //                    .errorCode(REQUEST_VALIDATION_FAILURE)
 //                    .devMsg("Illegal request dates sequence, possibly swapped 'date from' with 'date to'")

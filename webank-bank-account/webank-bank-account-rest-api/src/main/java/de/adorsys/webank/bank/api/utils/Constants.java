@@ -4,7 +4,7 @@
  */
 
 package de.adorsys.webank.bank.api.utils;
-
+@SuppressWarnings("PMD")
 
 public abstract class Constants {
 
