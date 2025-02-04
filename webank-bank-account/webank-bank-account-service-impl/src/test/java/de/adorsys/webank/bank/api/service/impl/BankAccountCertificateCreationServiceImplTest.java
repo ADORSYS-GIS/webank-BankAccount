@@ -56,9 +56,15 @@ class BankAccountCertificateCreationServiceImplTest {
     void testRegisterNewBankAccount_Failure() {
         when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(null);
 
+        // Create the BankAccountBO object outside the lambda
+        BankAccountBO account = new BankAccountBO();
+
         assertThrows(IllegalStateException.class, () ->
+                // Only the service call remains in the lambda
                 certificateCreationService.registerNewBankAccount(
-                        "123", "key", new BankAccountBO(), "user", "branch"));
+                        "123", "key", account, "user", "branch"
+                )
+        );
     }
 
     @Test
