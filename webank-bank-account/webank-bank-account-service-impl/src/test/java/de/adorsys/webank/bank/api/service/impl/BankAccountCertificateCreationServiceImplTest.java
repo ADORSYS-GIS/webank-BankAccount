@@ -1,6 +1,6 @@
 package de.adorsys.webank.bank.api.service.impl;
 
-import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.ECDSAVerifier;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
@@ -32,6 +32,10 @@ class BankAccountCertificateCreationServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        // Initialize the server keys for testing
+        certificateCreationService.serverPrivateKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"d\": \"E-_KxQl0ow6_4Munq81OH_lg64R2vDpe3zq9XnI0AjE\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
+        certificateCreationService.serverPublicKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
     }
 
     @Test
@@ -52,8 +56,8 @@ class BankAccountCertificateCreationServiceImplTest {
     void testRegisterNewBankAccount_Failure() {
         when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(null);
 
-        // Create object OUTSIDE the lambda
-        BankAccountBO account = new BankAccountBO(); // Fix class name typo (B0 -> BO)
+        // Create the BankAccountBO object outside the lambda
+        BankAccountBO account = new BankAccountBO();
 
         assertThrows(IllegalStateException.class, () ->
                 // Only the service call remains in the lambda
@@ -74,7 +78,7 @@ class BankAccountCertificateCreationServiceImplTest {
         assertNotNull(jws.getSignature());
 
         // Verify signature
-        ECKey publicKey = (ECKey) JWK.parse(TestConstants.SERVER_PUBLIC_KEY_JSON);
+        ECKey publicKey = (ECKey) JWK.parse(certificateCreationService.serverPublicKeyJson);
         assertTrue(jws.verify(new ECDSAVerifier(publicKey.toECPublicKey())));
     }
 
@@ -123,7 +127,7 @@ class BankAccountCertificateCreationServiceImplTest {
         JWSObject jws = JWSObject.parse(certificate);
         JWK headerJwk = jws.getHeader().getJWK();
 
-        ECKey expectedPublicKey = (ECKey) JWK.parse(TestConstants.SERVER_PUBLIC_KEY_JSON);
+        ECKey expectedPublicKey = (ECKey) JWK.parse(certificateCreationService.serverPublicKeyJson);
         assertEquals(expectedPublicKey.getKeyType(), headerJwk.getKeyType());
         assertEquals(expectedPublicKey.getCurve(), ((ECKey) headerJwk).getCurve());
         assertEquals(expectedPublicKey.getX().toString(), ((ECKey) headerJwk).getX().toString());
@@ -134,11 +138,5 @@ class BankAccountCertificateCreationServiceImplTest {
         byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
         digest.reset();
         return Base64.getEncoder().encodeToString(hash);
-    }
-
-    private static class TestConstants {
-        static final String SERVER_PUBLIC_KEY_JSON = "{ \"kty\": \"EC\", \"crv\": \"P-256\", " +
-                "\"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", " +
-                "\"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
     }
 }
