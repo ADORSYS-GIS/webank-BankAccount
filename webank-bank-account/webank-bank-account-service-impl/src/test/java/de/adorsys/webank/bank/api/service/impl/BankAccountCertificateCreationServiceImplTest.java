@@ -1,7 +1,6 @@
 package de.adorsys.webank.bank.api.service.impl;
 
 import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jose.crypto.ECDSAVerifier;
 import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
@@ -27,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class BankAccountCertificateCreationServiceImplTest {
+class BankAccountCertificateCreationServiceImplTest {
 
     @Mock
     private BankAccountServiceImpl bankAccountService;
@@ -70,8 +69,16 @@ public class BankAccountCertificateCreationServiceImplTest {
         when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(null);
 
         // Act & Assert
+        BankAccountBO accountBO = new BankAccountBO();
         assertThrows(IllegalStateException.class, () ->
-                service.registerNewBankAccount("+123456789", "devicePublicKey", new BankAccountBO(), "user", "branch"));
+                service.registerNewBankAccount(
+                        "+123456789",
+                        "devicePublicKey",
+                        accountBO, // Created outside lambda
+                        "user",
+                        "branch"
+                )
+        );
     }
 
     @Test
