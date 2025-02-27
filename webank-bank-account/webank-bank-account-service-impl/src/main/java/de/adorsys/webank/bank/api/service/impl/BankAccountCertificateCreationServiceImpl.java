@@ -26,10 +26,10 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     private final BankAccountService bankAccountService;
 
     @Value("${server.private.key}")
-    private String SERVER_PRIVATE_KEY_JSON;
+    private String serverPrivateKeyJson;
 
     @Value("${server.public.key}")
-    private String SERVER_PUBLIC_KEY_JSON;
+    private String serverPublicKeyJson;
 
     @Autowired
     public BankAccountCertificateCreationServiceImpl(BankAccountService bankAccountService) {
@@ -53,7 +53,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
         try {
 
             // Parse the server's private key from the JWK JSON string
-            ECKey serverPrivateKey = (ECKey) JWK.parse(SERVER_PRIVATE_KEY_JSON);
+            ECKey serverPrivateKey = (ECKey) JWK.parse(serverPrivateKeyJson);
 
             // Check that the private key contains the 'd' (private) parameter for signing
             if (serverPrivateKey.getD() == null) {
@@ -78,7 +78,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             Payload payload = new Payload(payloadData);
 
             // Parse the server's public key from the JWK JSON string
-            ECKey serverPublicKey = (ECKey) JWK.parse(SERVER_PUBLIC_KEY_JSON);
+            ECKey serverPublicKey = (ECKey) JWK.parse(serverPublicKeyJson);
 
             // Create the JWT header with the JWK object (the server public key)
             JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256)
