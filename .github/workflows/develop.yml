@@ -106,6 +106,10 @@ jobs:
   analyze:
     name: Build and analyze
     runs-on: ubuntu-latest
+    env:
+      SERVER_PUBLIC_KEY_JSON: ${{ vars.SERVER_PUBLIC_KEY_JSON }}
+      SERVER_PRIVATE_KEY_JSON: ${{ vars.SERVER_PRIVATE_KEY_JSON }}
+
     
     steps:
       - uses: actions/checkout@v4
@@ -172,6 +176,10 @@ jobs:
     needs: build
     name: Run code analyser PMD
     runs-on: ubuntu-latest
+    env:
+      SERVER_PUBLIC_KEY_JSON: ${{ vars.SERVER_PUBLIC_KEY_JSON }}
+      SERVER_PRIVATE_KEY_JSON: ${{ vars.SERVER_PRIVATE_KEY_JSON }}
+
     steps:
       - name: Clone webank online banking repository
         uses: actions/checkout@v4
