@@ -41,7 +41,7 @@ jobs:
                   <server>
                     <id>github-ledgers</id>
                     <username>${{ github.actor }}</username>
-                    <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+                    <password>${{ secrets.BANK_ACCOUNT_TOKEN }}</password>
                   </server>
                 </servers>
               </settings>" > ~/.m2/settings.xml
@@ -141,7 +141,7 @@ jobs:
                   <server>
                     <id>github-ledgers</id>
                     <username>${{ github.actor }}</username>
-                    <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+                    <password>${{ secrets.BANK_ACCOUNT_TOKEN }}</password>
                   </server>
                 </servers>
               </settings>" > ~/.m2/settings.xml
@@ -239,7 +239,7 @@ jobs:
   #                   <server>
   #                     <id>github-ledgers</id>
   #                     <username>${{ github.actor }}</username>
-  #                     <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+  #                     <password>${{ secrets.BANK_ACCOUNT_TOKEN }}</password>
   #                   </server>
   #                 </servers>
   #               </settings>" > ~/.m2/settings.xml    
