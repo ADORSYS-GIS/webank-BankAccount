@@ -18,6 +18,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.time.Instant;
 import java.util.Base64;
 
@@ -82,7 +84,7 @@ class BankAccountCertificateCreationServiceImplTest {
     }
 
     @Test
-    void generateBankAccountCertificate_ValidInputs_ReturnsValidJWT() throws Exception {
+    void generateBankAccountCertificate_ValidInputs_ReturnsValidJWT() throws JOSEException, ParseException, NoSuchAlgorithmException {
         // Arrange
         String devicePublicKey = "testDevicePublicKey";
         String accountId = "testAccount123";
