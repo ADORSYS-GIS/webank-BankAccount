@@ -12,6 +12,9 @@ jobs:
   build:
       
     runs-on: ubuntu-latest
+    env:
+      SERVER_PUBLIC_KEY_JSON: ${{ vars.SERVER_PUBLIC_KEY_JSON }}
+      SERVER_PRIVATE_KEY_JSON: ${{ vars.SERVER_PRIVATE_KEY_JSON }}
 
     steps:
     - uses: actions/checkout@v4
@@ -24,7 +27,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -38,7 +41,7 @@ jobs:
                   <server>
                     <id>github-ledgers</id>
                     <username>${{ github.actor }}</username>
-                    <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+                    <password>${{ secrets.BANK_ACCOUNT_TOKEN }}</password>
                   </server>
                 </servers>
               </settings>" > ~/.m2/settings.xml
@@ -63,7 +66,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Cache Maven packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -91,7 +94,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Cache Maven packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -103,6 +106,10 @@ jobs:
   analyze:
     name: Build and analyze
     runs-on: ubuntu-latest
+    env:
+      SERVER_PUBLIC_KEY_JSON: ${{ vars.SERVER_PUBLIC_KEY_JSON }}
+      SERVER_PRIVATE_KEY_JSON: ${{ vars.SERVER_PRIVATE_KEY_JSON }}
+
     
     steps:
       - uses: actions/checkout@v4
@@ -114,13 +121,13 @@ jobs:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Cache SonarQube packages
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Maven packages
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -134,7 +141,7 @@ jobs:
                   <server>
                     <id>github-ledgers</id>
                     <username>${{ github.actor }}</username>
-                    <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+                    <password>${{ secrets.BANK_ACCOUNT_TOKEN }}</password>
                   </server>
                 </servers>
               </settings>" > ~/.m2/settings.xml
@@ -169,6 +176,10 @@ jobs:
     needs: build
     name: Run code analyser PMD
     runs-on: ubuntu-latest
+    env:
+      SERVER_PUBLIC_KEY_JSON: ${{ vars.SERVER_PUBLIC_KEY_JSON }}
+      SERVER_PRIVATE_KEY_JSON: ${{ vars.SERVER_PRIVATE_KEY_JSON }}
+
     steps:
       - name: Clone webank online banking repository
         uses: actions/checkout@v4
@@ -180,11 +191,24 @@ jobs:
           architecture: x64
           distribution: 'temurin'
       - name: Cache Maven packages
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      - name: Set up Maven settings.xml
+        run: |
+            mkdir -p ~/.m2
+            echo "<settings>
+                   <servers>
+                     <server>
+                       <id>github-ledgers</id>
+                       <username>${{ github.actor }}</username>
+                       <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+                     </server>
+                   </servers>
+                 </settings>" > ~/.m2/settings.xml
 
 
 
@@ -228,7 +252,7 @@ jobs:
   #                   <server>
   #                     <id>github-ledgers</id>
   #                     <username>${{ github.actor }}</username>
-  #                     <password>${{ secrets.WEBANK_ACCESS_TOKEN }}</password>
+  #                     <password>${{ secrets.BANK_ACCOUNT_TOKEN }}</password>
   #                   </server>
   #                 </servers>
   #               </settings>" > ~/.m2/settings.xml    

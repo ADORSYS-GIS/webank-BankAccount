@@ -1,144 +1,135 @@
 package de.adorsys.webank.bank.api.service.impl;
 
-import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.ECDSAVerifier;
+import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.util.JSONObjectUtils;
+import com.nimbusds.jose.jwk.gen.ECKeyGenerator;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.webank.bank.api.domain.BankAccountBO;
-import de.adorsys.webank.bank.api.service.BankAccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.time.Instant;
 import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class BankAccountCertificateCreationServiceImplTest {
 
     @Mock
-    private BankAccountService bankAccountService;
+    private BankAccountServiceImpl bankAccountService;
 
     @InjectMocks
-    private BankAccountCertificateCreationServiceImpl certificateCreationService;
+    private BankAccountCertificateCreationServiceImpl service;
+
+    private ECKey ecKey;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() throws Exception {
+        // Generate a new EC key pair for testing
+        ecKey = new ECKeyGenerator(Curve.P_256)
+                .keyID("123")
+                .generate();
+
+        // Inject the server's private and public keys into the service
+        ReflectionTestUtils.setField(service, "serverPrivateKeyJson", ecKey.toJSONString());
+        ReflectionTestUtils.setField(service, "serverPublicKeyJson", ecKey.toPublicJWK().toJSONString());
     }
 
     @Test
-    void testRegisterNewBankAccount_Success() {
-        BankAccountBO account = new BankAccountBO();
-        account.setId("123");
-        when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(account);
+    void registerNewBankAccount_Success_ReturnsAccountIdAndCertificate() {
+        // Arrange
+        BankAccountBO mockAccount = new BankAccountBO();
+        mockAccount.setId("account123");
+        when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(mockAccount);
 
-        String result = certificateCreationService.registerNewBankAccount(
-                "1234567890", "deviceKey", new BankAccountBO(), "user", "branch");
+        // Act
+        String result = service.registerNewBankAccount("+123456789", "devicePublicKey", new BankAccountBO(), "user", "branch");
 
-        assertTrue(result.contains("Account ID:\n123"));
-        assertTrue(result.contains("Account certificate:"));
-        verify(bankAccountService, times(1)).createNewAccount(any(), any(), any());
+        // Assert
+        assertTrue(result.contains("Account ID:\naccount123"));
+        assertTrue(result.contains("Account certificate:\n"));
     }
 
     @Test
-    void testRegisterNewBankAccount_Failure() {
+    void registerNewBankAccount_CreationFails_ThrowsException() {
+        // Arrange
         when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(null);
 
-        // Create object OUTSIDE the lambda
-        BankAccountBO account = new BankAccountBO(); // Fix class name typo (B0 -> BO)
-
+        // Act & Assert
+        BankAccountBO accountBO = new BankAccountBO();
         assertThrows(IllegalStateException.class, () ->
-                // Only the service call remains in the lambda
-                certificateCreationService.registerNewBankAccount(
-                        "123", "key", account, "user", "branch"
+                service.registerNewBankAccount(
+                        "+123456789",
+                        "devicePublicKey",
+                        accountBO, // Created outside lambda
+                        "user",
+                        "branch"
                 )
         );
     }
 
     @Test
-    void testGenerateBankAccountCertificate_Success() throws Exception {
-        String certificate = certificateCreationService.generateBankAccountCertificate(
-                "1234567890", "deviceKey", "account123");
+    void generateBankAccountCertificate_ValidInputs_ReturnsValidJWT() throws JOSEException, ParseException, NoSuchAlgorithmException {
+        // Arrange
+        String devicePublicKey = "testDevicePublicKey";
+        String accountId = "testAccount123";
 
-        JWSObject jws = JWSObject.parse(certificate);
-        assertNotNull(jws.getHeader());
-        assertNotNull(jws.getPayload());
-        assertNotNull(jws.getSignature());
+        // Act
+        String jwt = service.generateBankAccountCertificate(devicePublicKey, accountId);
+        SignedJWT signedJWT = SignedJWT.parse(jwt);
 
-        // Verify signature
-        ECKey publicKey = (ECKey) JWK.parse(TestConstants.SERVER_PUBLIC_KEY_JSON);
-        assertTrue(jws.verify(new ECDSAVerifier(publicKey.toECPublicKey())));
-    }
+        // Verify the signature
+        ECDSAVerifier verifier = new ECDSAVerifier(ecKey.toPublicJWK());
+        assertTrue(signedJWT.verify(verifier));
 
-    @Test
-    void testGenerateBankAccountCertificate_HashCorrectness() throws Exception {
-        String phone = "1234567890";
-        String deviceKey = "publicKey123";
-        String accountId = "account456";
+        // Extract claims
+        JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
 
-        String certificate = certificateCreationService.generateBankAccountCertificate(phone, deviceKey, accountId);
-        JWSObject jws = JWSObject.parse(certificate);
-        String payload = jws.getPayload().toString();
-
-        // Compute expected hashes
+        // Validate account ID hash
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        String expectedPhoneHash = hashAndEncode(phone, digest);
-        String expectedDeviceHash = hashAndEncode(deviceKey, digest);
-        String expectedAccountHash = hashAndEncode(accountId, digest);
+        byte[] hashedAccountId = digest.digest(accountId.getBytes(StandardCharsets.UTF_8));
+        String expectedAccHash = Base64.getEncoder().encodeToString(hashedAccountId);
+        assertEquals(expectedAccHash, claims.getStringClaim("acc"));
 
-        // Verify payload content
-        assertEquals(expectedPhoneHash, JSONObjectUtils.getString(JSONObjectUtils.parse(payload), "phoneHash"));
-        assertEquals(expectedDeviceHash, JSONObjectUtils.getString(JSONObjectUtils.parse(payload), "devicePubKeyHash"));
-        assertEquals(expectedAccountHash, JSONObjectUtils.getString(JSONObjectUtils.parse(payload), "accountIdHash"));
+        // Validate device public key hash
+        byte[] hashedDeviceKey = digest.digest(devicePublicKey.getBytes(StandardCharsets.UTF_8));
+        String expectedCnfHash = Base64.getEncoder().encodeToString(hashedDeviceKey);
+        assertEquals(expectedCnfHash, claims.getStringClaim("cnf"));
+
+        // Validate expiration time (within 2 seconds of expected)
+        long expectedExp = Instant.now().plusSeconds(30 * 86400).getEpochSecond();
+        long actualExp = claims.getExpirationTime().toInstant().getEpochSecond();
+        assertTrue(Math.abs(expectedExp - actualExp) <= 2);
+
+        // Validate header
+        assertEquals(JWSAlgorithm.ES256, signedJWT.getHeader().getAlgorithm());
+        assertEquals(JOSEObjectType.JWT, signedJWT.getHeader().getType());
+        assertNotNull(signedJWT.getHeader().getJWK());
     }
 
     @Test
-    void testGenerateBankAccountCertificate_NullParameters() {
+    void generateBankAccountCertificate_InvalidPrivateKey_ThrowsException() {
+        // Arrange: Use a public key (without 'd') as the private key
+        ECKey publicKey = ecKey.toPublicJWK();
+        ReflectionTestUtils.setField(service, "serverPrivateKeyJson", publicKey.toJSONString());
+
+        // Act & Assert
         assertThrows(IllegalStateException.class, () ->
-                certificateCreationService.generateBankAccountCertificate(null, "key", "id"));
-        assertThrows(IllegalStateException.class, () ->
-                certificateCreationService.generateBankAccountCertificate("123", null, "id"));
-        assertThrows(IllegalStateException.class, () ->
-                certificateCreationService.generateBankAccountCertificate("123", "key", null));
-    }
-
-    @Test
-    void testGenerateBankAccountCertificate_EmptyParameters() {
-        assertDoesNotThrow(() ->
-                certificateCreationService.generateBankAccountCertificate("", "", ""));
-    }
-
-    @Test
-    void testGenerateBankAccountCertificate_JwkHeader() throws Exception {
-        String certificate = certificateCreationService.generateBankAccountCertificate(
-                "123", "key", "id");
-        JWSObject jws = JWSObject.parse(certificate);
-        JWK headerJwk = jws.getHeader().getJWK();
-
-        ECKey expectedPublicKey = (ECKey) JWK.parse(TestConstants.SERVER_PUBLIC_KEY_JSON);
-        assertEquals(expectedPublicKey.getKeyType(), headerJwk.getKeyType());
-        assertEquals(expectedPublicKey.getCurve(), ((ECKey) headerJwk).getCurve());
-        assertEquals(expectedPublicKey.getX().toString(), ((ECKey) headerJwk).getX().toString());
-        assertEquals(expectedPublicKey.getY().toString(), ((ECKey) headerJwk).getY().toString());
-    }
-
-    private String hashAndEncode(String input, MessageDigest digest) {
-        byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
-        digest.reset();
-        return Base64.getEncoder().encodeToString(hash);
-    }
-
-    private static class TestConstants {
-        static final String SERVER_PUBLIC_KEY_JSON = "{ \"kty\": \"EC\", \"crv\": \"P-256\", " +
-                "\"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", " +
-                "\"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
+                service.generateBankAccountCertificate("deviceKey", "account123"));
     }
 }

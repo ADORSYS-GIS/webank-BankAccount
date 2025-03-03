@@ -10,18 +10,26 @@ import de.adorsys.webank.bank.api.service.util.BankAccountCertificateCreationSer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.time.Instant;
 import java.util.Base64;
 
 @Service
 public class BankAccountCertificateCreationServiceImpl implements BankAccountCertificateCreationService {
 
     private static final Logger log = LoggerFactory.getLogger(BankAccountCertificateCreationServiceImpl.class);
-
+    private static  final long EXPIRATION_DAYS = 30;
     private final BankAccountService bankAccountService;
+
+    @Value("${server.private.key}")
+    private String serverPrivateKeyJson;
+
+    @Value("${server.public.key}")
+    private String serverPublicKeyJson;
 
     @Autowired
     public BankAccountCertificateCreationServiceImpl(BankAccountService bankAccountService) {
@@ -37,15 +45,12 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             throw new IllegalStateException("Failed to create bank account.");
         }
         // Generate the certificate using the created account's ID
-        return "\nAccount ID:\n" +createdAccount.getId() + "\nAccount certificate:\n" +  generateBankAccountCertificate(phoneNumber, devicePublicKey, createdAccount.getId());
+        return "\nAccount ID:\n" +createdAccount.getId() + "\nAccount certificate:\n" +  generateBankAccountCertificate(devicePublicKey, createdAccount.getId());
     }
 
     @Override
-    public String generateBankAccountCertificate(String phoneNumber, String devicePublicKey, String accountId) {
+    public String generateBankAccountCertificate(String devicePublicKey, String accountId) {
         try {
-            //@Value("${server.private.key}")
-            String serverPrivateKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"d\": \"E-_KxQl0ow6_4Munq81OH_lg64R2vDpe3zq9XnI0AjE\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
-            //@Value("${server.public.key}")
 
             // Parse the server's private key from the JWK JSON string
             ECKey serverPrivateKey = (ECKey) JWK.parse(serverPrivateKeyJson);
@@ -57,12 +62,8 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
 
             JWSSigner signer = new ECDSASigner(serverPrivateKey);
 
-            // Compute hash of the phone number
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashedPhoneNumber = digest.digest(phoneNumber.getBytes(StandardCharsets.UTF_8));
-            String phoneHash = Base64.getEncoder().encodeToString(hashedPhoneNumber);
-
             // Compute hash of the device's public key
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashedDevicePubKey = digest.digest(devicePublicKey.getBytes(StandardCharsets.UTF_8));
             String devicePubKeyHash = Base64.getEncoder().encodeToString(hashedDevicePubKey);
 
@@ -70,12 +71,11 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             byte[] hashedAccountId = digest.digest(accountId.getBytes(StandardCharsets.UTF_8));
             String accountIdHash = Base64.getEncoder().encodeToString(hashedAccountId);
 
+            // Calculate expiration timestamp
+            long expirationTime = Instant.now().plusSeconds(EXPIRATION_DAYS * 86400).getEpochSecond();
             // Create JWT payload including phoneHash, devicePubKeyHash, and accountIdHash
-            String payloadData = String.format("{\"phoneHash\": \"%s\", \"devicePubKeyHash\": \"%s\", \"accountIdHash\": \"%s\"}", phoneHash, devicePubKeyHash, accountIdHash);
+            String payloadData = String.format("{\"acc\": \"%s\", \"exp\": %d, \"cnf\": \"%s\"}", accountIdHash, expirationTime, devicePubKeyHash);
             Payload payload = new Payload(payloadData);
-
-
-            String serverPublicKeyJson = "{ \"kty\": \"EC\", \"crv\": \"P-256\", \"x\": \"PHlAcVDiqi7130xWiMn5CEbOyg_Yo0qfOhabhPlDV_s\", \"y\": \"N5bqvbDjbsX2uo2_lzKrwPt7fySMweZVeFSAv99TEEc\" }";
 
             // Parse the server's public key from the JWK JSON string
             ECKey serverPublicKey = (ECKey) JWK.parse(serverPublicKeyJson);
