@@ -27,7 +27,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Cache Maven packages
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -66,7 +66,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Cache Maven packages
-        uses: actions/cache@4
+        uses: actions/cache@3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -94,7 +94,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Cache Maven packages
-        uses: actions/cache@4
+        uses: actions/cache@3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -121,13 +121,13 @@ jobs:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Cache SonarQube packages
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Maven packages
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -191,7 +191,7 @@ jobs:
           architecture: x64
           distribution: 'temurin'
       - name: Cache Maven packages
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
