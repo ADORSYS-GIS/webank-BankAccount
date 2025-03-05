@@ -5,6 +5,5 @@ import de.adorsys.webank.bank.api.domain.BankAccountBO;
 public interface BankAccountCertificateCreationService {
 
     String registerNewBankAccount(String phoneNumber, String devicePublicKey, BankAccountBO bankAccountBO, String userName, String branch);
-
-    String generateBankAccountCertificate(String phoneNumber, String devicePublicKey, String accountId);
+    String generateBankAccountCertificate(String devicePublicKey, String accountId);
 }
