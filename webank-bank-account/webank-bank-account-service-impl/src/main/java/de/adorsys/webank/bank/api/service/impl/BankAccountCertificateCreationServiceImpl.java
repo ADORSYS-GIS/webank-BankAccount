@@ -32,7 +32,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     private String serverPublicKeyJson;
 
     @Autowired
-    public BankAccountCertificateCreationServiceImpl(BankAccountService bankAccountService) {
+    private BankAccountCertificateCreationServiceImpl(BankAccountService bankAccountService) {
         this.bankAccountService = bankAccountService;
     }
 
