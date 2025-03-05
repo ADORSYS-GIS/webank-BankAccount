@@ -32,7 +32,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     private String serverPublicKeyJson;
 
     @Autowired
-    public BankAccountCertificateCreationServiceImpl(BankAccountService bankAccountService) {
+    private BankAccountCertificateCreationServiceImpl(BankAccountService bankAccountService) {
         this.bankAccountService = bankAccountService;
     }
 
@@ -69,7 +69,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
 
             // Compute hash of the account ID
             byte[] hashedAccountId = digest.digest(accountId.getBytes(StandardCharsets.UTF_8));
-            String accountIdHash = Base64.getEncoder().encodeToString(hashedAccountId);
+            String accountIdHash = HashUtil.hashToHex(hashedAccountId);
 
             // Calculate expiration timestamp
             long expirationTime = Instant.now().plusSeconds(EXPIRATION_DAYS * 86400).getEpochSecond();
@@ -95,6 +95,23 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             // Log the exception for debugging
             log.error("Error generating device certificate", e);
             throw new IllegalStateException("Error generating device certificate");
+        }
+    }
+
+    public static class HashUtil {
+
+        //Private constructor to prevent instantiation
+        private HashUtil() {
+
+        }
+
+        public static String hashToHex(byte[] hashedBytes) {
+            // Convert to Hex encoding
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
         }
     }
 }

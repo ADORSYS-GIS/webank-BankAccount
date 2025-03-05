@@ -102,9 +102,11 @@ class BankAccountCertificateCreationServiceImplTest {
 
         // Validate account ID hash
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+        // Compute hash of the account ID
         byte[] hashedAccountId = digest.digest(accountId.getBytes(StandardCharsets.UTF_8));
-        String expectedAccHash = Base64.getEncoder().encodeToString(hashedAccountId);
-        assertEquals(expectedAccHash, claims.getStringClaim("acc"));
+        String expectedAccountIdHash = BankAccountCertificateCreationServiceImpl.HashUtil.hashToHex(hashedAccountId);
+        assertEquals(expectedAccountIdHash, claims.getStringClaim("acc"));
 
         // Validate device public key hash
         byte[] hashedDeviceKey = digest.digest(devicePublicKey.getBytes(StandardCharsets.UTF_8));
