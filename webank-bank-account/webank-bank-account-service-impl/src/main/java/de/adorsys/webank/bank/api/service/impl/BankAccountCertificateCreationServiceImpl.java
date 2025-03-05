@@ -99,6 +99,12 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     }
 
     public static class HashUtil {
+
+        //Private constructor to prevent instantiation
+        private HashUtil() {
+
+        }
+
         public static String hashToHex(byte[] hashedBytes) {
             // Convert to Hex encoding
             StringBuilder hexString = new StringBuilder();
