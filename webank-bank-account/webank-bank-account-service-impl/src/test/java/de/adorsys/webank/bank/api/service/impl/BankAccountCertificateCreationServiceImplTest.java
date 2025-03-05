@@ -92,8 +92,7 @@ class BankAccountCertificateCreationServiceImplTest {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         String expectedPhoneHash = hashAndEncode(phone, digest);
         String expectedDeviceHash = hashAndEncode(deviceKey, digest);
-        String expectedAccountHash = hashAndEncode(accountId, digest);
-
+        String expectedAccountHash = HashUtil.hashToHex(digest.digest(accountId.getBytes(StandardCharsets.UTF_8)));
         // Verify payload content
         assertEquals(expectedPhoneHash, JSONObjectUtils.getString(JSONObjectUtils.parse(payload), "phoneHash"));
         assertEquals(expectedDeviceHash, JSONObjectUtils.getString(JSONObjectUtils.parse(payload), "devicePubKeyHash"));
@@ -134,6 +133,17 @@ class BankAccountCertificateCreationServiceImplTest {
         byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
         digest.reset();
         return Base64.getEncoder().encodeToString(hash);
+    }
+
+    public static class HashUtil {
+        public static String hashToHex(byte[] hashedBytes) {
+            // Convert to Hex encoding
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        }
     }
 
     private static class TestConstants {
