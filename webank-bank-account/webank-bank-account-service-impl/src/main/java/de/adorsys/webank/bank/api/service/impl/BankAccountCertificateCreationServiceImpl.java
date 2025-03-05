@@ -11,10 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.Arrays.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
+import java.security.NoSuchAlgorithmException;
 
 @Service
 public class BankAccountCertificateCreationServiceImpl implements BankAccountCertificateCreationService {
@@ -68,7 +69,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
 
             // Compute hash of the account ID
             byte[] hashedAccountId = digest.digest(accountId.getBytes(StandardCharsets.UTF_8));
-            String accountIdHash = Base64.getEncoder().encodeToString(hashedAccountId);
+            String accountIdHash = HashUtil.hashToHex(hashedAccountId);
 
             // Create JWT payload including phoneHash, devicePubKeyHash, and accountIdHash
             String payloadData = String.format("{\"phoneHash\": \"%s\", \"devicePubKeyHash\": \"%s\", \"accountIdHash\": \"%s\"}", phoneHash, devicePubKeyHash, accountIdHash);
@@ -95,6 +96,17 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             // Log the exception for debugging
             log.error("Error generating device certificate", e);
             throw new IllegalStateException("Error generating device certificate");
+        }
+    }
+
+    public static class HashUtil {
+        public static String hashToHex(byte[] hashedBytes) {
+            // Convert to Hex encoding
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
         }
     }
 }
