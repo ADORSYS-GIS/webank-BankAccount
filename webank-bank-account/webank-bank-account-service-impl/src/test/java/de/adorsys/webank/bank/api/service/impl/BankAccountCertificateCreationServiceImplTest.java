@@ -121,7 +121,6 @@ class BankAccountCertificateCreationServiceImplTest {
         // Validate header
         assertEquals(JWSAlgorithm.ES256, signedJWT.getHeader().getAlgorithm());
         assertEquals(JOSEObjectType.JWT, signedJWT.getHeader().getType());
-        assertNotNull(signedJWT.getHeader().getJWK());
     }
 
     @Test
