@@ -77,13 +77,9 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
             String payloadData = String.format("{\"acc\": \"%s\", \"exp\": %d, \"cnf\": \"%s\"}", accountIdHash, expirationTime, devicePubKeyHash);
             Payload payload = new Payload(payloadData);
 
-            // Parse the server's public key from the JWK JSON string
-            ECKey serverPublicKey = (ECKey) JWK.parse(serverPublicKeyJson);
-
             // Create the JWT header with the JWK object (the server public key)
             JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256)
                     .type(JOSEObjectType.JWT)
-                    .jwk(serverPublicKey.toPublicJWK()) // Add JWK to the header
                     .build();
 
             // Build the JWS object
@@ -99,10 +95,8 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     }
 
     public static class HashUtil {
-
         //Private constructor to prevent instantiation
         private HashUtil() {
-
         }
 
         public static String hashToHex(byte[] hashedBytes) {
