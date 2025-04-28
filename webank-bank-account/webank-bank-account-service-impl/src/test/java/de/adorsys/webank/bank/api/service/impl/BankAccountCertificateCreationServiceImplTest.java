@@ -58,7 +58,7 @@ class BankAccountCertificateCreationServiceImplTest {
         when(bankAccountService.createNewAccount(any(), any(), any())).thenReturn(mockAccount);
 
         // Act
-        String result = service.registerNewBankAccount("+123456789", "devicePublicKey", new BankAccountBO(), "user", "branch");
+        String result = service.registerNewBankAccount("devicePublicKey", new BankAccountBO(), "user", "branch");
 
         // Assert
         assertTrue(result.contains("Account ID:\naccount123"));
@@ -74,7 +74,6 @@ class BankAccountCertificateCreationServiceImplTest {
         BankAccountBO accountBO = new BankAccountBO();
         assertThrows(IllegalStateException.class, () ->
                 service.registerNewBankAccount(
-                        "+123456789",
                         "devicePublicKey",
                         accountBO, // Created outside lambda
                         "user",

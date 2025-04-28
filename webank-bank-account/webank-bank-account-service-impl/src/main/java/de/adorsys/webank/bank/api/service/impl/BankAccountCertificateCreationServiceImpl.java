@@ -37,7 +37,7 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     }
 
     @Override
-    public String registerNewBankAccount(String phoneNumber, String devicePublicKey, BankAccountBO bankAccountBO, String userName, String branch) {
+    public String registerNewBankAccount(String devicePublicKey, BankAccountBO bankAccountBO, String userName, String branch) {
         // Create the new account
         BankAccountBO createdAccount = bankAccountService.createNewAccount(bankAccountBO, userName, branch);
         boolean isAccountCreated = createdAccount != null && createdAccount.getId() != null;
