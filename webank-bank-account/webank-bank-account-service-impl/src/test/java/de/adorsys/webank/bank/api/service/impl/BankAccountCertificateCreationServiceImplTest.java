@@ -47,7 +47,6 @@ class BankAccountCertificateCreationServiceImplTest {
 
         // Inject the server's private and public keys into the service
         ReflectionTestUtils.setField(service, "serverPrivateKeyJson", ecKey.toJSONString());
-        ReflectionTestUtils.setField(service, "serverPublicKeyJson", ecKey.toPublicJWK().toJSONString());
     }
 
     @Test

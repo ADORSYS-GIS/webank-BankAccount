@@ -25,11 +25,8 @@ public class BankAccountCertificateCreationServiceImpl implements BankAccountCer
     private static  final long EXPIRATION_DAYS = 30;
     private final BankAccountService bankAccountService;
 
-    @Value("${server.private.key}")
+    @Value("${server.privateKey}")
     private String serverPrivateKeyJson;
-
-    @Value("${server.public.key}")
-    private String serverPublicKeyJson;
 
     @Autowired
     private BankAccountCertificateCreationServiceImpl(BankAccountService bankAccountService) {
